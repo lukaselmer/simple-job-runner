@@ -1,4 +1,8 @@
-#!/bin/zsh
+#!/bin/sh -
+
+[ -z "$ZSH_VERSION" ] && exec zsh - "$0" ${1+"$@"}
+
+#/bin/zsh
 
 bundle exec rubocop -a -D
 RC=$?
