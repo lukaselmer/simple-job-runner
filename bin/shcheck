@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh -
 
 bundle exec rubocop -a -D
 RC=$?

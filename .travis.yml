@@ -19,4 +19,4 @@ before_script:
 
 script:
   - bundle exec rspec
-  - bin/check
+  - bin/shcheck
