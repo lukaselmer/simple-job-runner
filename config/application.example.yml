@@ -1,7 +1,7 @@
 # Mail settings
 MAIL_USERNAME: ''
 MAIL_PASSWORD: ''
-MAIL_SENDER: '<yourname>+<application>@<yourmailhost>'
+MAIL_SENDER: '<yourname>+simple-job-runner@<yourmailhost>'
 
 # Use /etc/hosts to change the dns to 127.0.0.1
 APP_HOST: 'simple-job-runner.dev'
@@ -18,4 +18,4 @@ ADMIN_EMAIL: '<yourname>+simple-job-runner@<yourmailhost>'
 ADMIN_PASSWORD: 'developer'
 
 # See https://codeclimate.com/repos/5585c584695680410e01ab37/coverage_setup
-CODECLIMATE_REPO_TOKEN: ''
+CODECLIMATE_REPO_TOKEN: '1e68b6097ac93461d2d48687220ebb7dbd8b37c7da3e884cd15f5f2cba987334'

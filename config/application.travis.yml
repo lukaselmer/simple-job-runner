@@ -1,0 +1,21 @@
+# Mail settings
+MAIL_USERNAME: ''
+MAIL_PASSWORD: ''
+MAIL_SENDER: 'ci+simple-job-runner@example.com'
+
+# Use /etc/hosts to change the dns to 127.0.0.1
+APP_HOST: 'simple-job-runner.dev'
+APP_PORT: '3000'
+
+# Secrets
+SECRET_KEY_BASE: '6ab53ddae98c3901ebc04cd6eb2159cffef1a5e9564a971795f9b13276f56a5e3929af1048c7e6d364b1162c85890c19e2ccfbc9b56fcf69cb9f45eb55f3d422'
+DEVISE_SECRET_KEY: '737b265d2d1ef61d511f96b57da1d5667cf4fb0e0c3a8a5408b88980d347d6ea172bd0b9fc7f5beb994ee76bc3bd1471172772db1f699830acffb59e5a369aad'
+DEVISE_PEPPER: 'f929044c68d2a9f6d73284ca1d398c041f4eb2c6b85f190fd60eda3c28627896d6f9aca62b1735d2970b53bd1c26166d3631deb04b800e2537acdc0ef3580dea'
+
+# This is used to seed your database
+# Use a random password for develop/master/testing
+ADMIN_EMAIL: 'ci+simple-job-runner@example.com'
+ADMIN_PASSWORD: 'developer'
+
+# See https://codeclimate.com/repos/5585c584695680410e01ab37/coverage_setup
+CODECLIMATE_REPO_TOKEN: '1e68b6097ac93461d2d48687220ebb7dbd8b37c7da3e884cd15f5f2cba987334'
