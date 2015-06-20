@@ -2,8 +2,8 @@ postgres: &postgres
   adapter: postgresql
   encoding: unicode
   pool: 5
-  username: lukas
-  password: 'luke'
+  username: postgres
+  password: ''
 
 development:
   <<: *postgres

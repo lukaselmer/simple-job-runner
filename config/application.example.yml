@@ -1,0 +1,19 @@
+
+MAIL_USERNAME: ''
+MAIL_PASSWORD: ''
+MAIL_SENDER: '<yourname>+<application>@<yourmailhost>'
+
+# Use /etc/hosts to change the dns to 127.0.0.1
+APP_HOST: 'simple-job-runner.dev'
+APP_PORT: '3000'
+
+# Secrets
+SECRET_KEY_BASE: 'rake secret'
+DEVISE_SECRET_KEY: 'rake secret'
+DEVISE_PEPPER: 'rake secret'
+
+# This is used to seed your database
+# Use a random password for develop/master/testing
+ADMIN_EMAIL: '<yourname>+simple-job-runner@<yourmailhost>'
+ADMIN_PASSWORD: 'developer'
+
