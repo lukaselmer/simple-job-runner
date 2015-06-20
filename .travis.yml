@@ -18,5 +18,5 @@ before_script:
     - cp config/application.travis.yml config/database.yml
 
 script:
-  - bin/check
   - bundle exec rspec
+  - bin/check
