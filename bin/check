@@ -14,7 +14,7 @@ if [ ! $RC -eq 0 ]; then
   exit 1
 fi
 
-coffeelint -f coffeelint.json app/assets/javascripts/**/*.coffee
+coffeelint -f .coffeelint.json app/assets/javascripts/**/*.coffee
 RC=$?
 if [ ! $RC -eq 0 ]; then
   echo 'coffeelint detected issues, commit aborted!'
