@@ -1,0 +1,10 @@
+postgres: &postgres
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: postgres
+
+test:
+  <<: *postgres
+  database: travis_ci_test
+
