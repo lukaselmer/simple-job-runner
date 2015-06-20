@@ -3,5 +3,15 @@ postgres: &postgres
   encoding: unicode
   pool: 5
   username: postgres
-  password: ''
+
+development:
+  <<: *postgres
+  database: travis_ci_test
+
+test:
+  <<: *postgres
+  database: travis_ci_test
+
+production:
+  <<: *postgres
   database: travis_ci_test
