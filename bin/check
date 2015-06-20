@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-bundle exec rubocop -a -D
+bundle exec rubocop -a -D -c .rubocop.yml
 RC=$?
 if [ ! $RC -eq 0 ]; then
   echo 'rubocop detected issues, commit aborted!'
@@ -21,7 +21,7 @@ if [ ! $RC -eq 0 ]; then
   exit 1
 fi
 
-bundle exec brakeman -z --summary
+bundle exec brakeman -z --summary -q
 RC=$?
 if [ ! $RC -eq 0 ]; then
   echo 'brakeman detected issues, commit aborted!'

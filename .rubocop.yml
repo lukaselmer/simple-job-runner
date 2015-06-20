@@ -22,5 +22,5 @@ AllCops:
     - 'tmp/**/*'
     - 'config/unicorn.rb'
     - 'db/**/*'
+    - 'vendor/bundle/**/*'
     #- 'spec/**/*'
-    - 'vendor/bundle'
