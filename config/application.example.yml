@@ -1,4 +1,4 @@
-
+# Mail settings
 MAIL_USERNAME: ''
 MAIL_PASSWORD: ''
 MAIL_SENDER: '<yourname>+<application>@<yourmailhost>'
@@ -17,3 +17,5 @@ DEVISE_PEPPER: 'rake secret'
 ADMIN_EMAIL: '<yourname>+simple-job-runner@<yourmailhost>'
 ADMIN_PASSWORD: 'developer'
 
+# See https://codeclimate.com/repos/5585c584695680410e01ab37/coverage_setup
+CODECLIMATE_REPO_TOKEN: ''
