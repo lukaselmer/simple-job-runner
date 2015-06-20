@@ -3,6 +3,7 @@ postgres: &postgres
   encoding: unicode
   pool: 5
   username: postgres
+  password: ''
 
 development:
   <<: *postgres
