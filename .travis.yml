@@ -17,6 +17,7 @@ before_script:
     - cp config/database.travis.yml config/database.yml
     - cp config/application.travis.yml config/application.yml
     - gem install scss-lint
+    - npm install -g coffeelint
 
 script:
   - bundle exec rspec
