@@ -1,6 +1,8 @@
 #!/bin/zsh
 
-source ~/.zshrc
+if ! command -v bundle > /dev/null; then
+  source ~/.zshrc
+fi
 
 bundle exec rubocop -a -D -c .rubocop.yml
 RC=$?
