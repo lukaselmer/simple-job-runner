@@ -18,6 +18,9 @@ gem 'devise'
 gem 'devise-i18n'
 gem 'rack-timeout'
 
+gem 'slim'
+gem 'slim-rails'
+gem 'bootstrap-sass'
 
 group :development do
   gem 'better_errors'
@@ -34,10 +37,10 @@ group :development, :test do
   gem 'rubocop'
   gem 'did_you_mean'
   gem 'awesome_print'
+  gem 'rspec-rails'
 end
 
 group :test do
-  gem 'rspec-rails'
   gem 'capybara'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
