@@ -14,8 +14,6 @@ gem 'turbolinks'
 gem 'jbuilder'
 
 gem 'figaro'
-gem 'devise'
-gem 'devise-i18n'
 
 gem 'slim'
 gem 'slim-rails'

@@ -1,0 +1,24 @@
+h1 Home#index
+
+h3 Authentication
+
+- if @authentication_valid
+  .alert.alert-success
+    | This authentication is valid
+  div
+    = link_to 'Got to runs', runs_path, class: 'btn btn-default'
+- else
+  .alert.alert-danger
+    | This authentication is invalid
+
+h3 Current API Key
+
+pre == session[:api_key]
+
+p
+  h3 Re-authenticate
+  form
+    .form-group
+      label for='api_key' API Key
+      input.form-control id='api_key' placeholder='API Key' name='api_key' value=session[:api_key]
+    button.btn.btn-default type='submit' Authenticate

@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  skip_before_filter :authenticate_with_api_key, only: :index
+
   def index
   end
 
