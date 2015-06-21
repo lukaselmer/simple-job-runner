@@ -11,6 +11,5 @@ RSpec.describe 'Runs', type: :request do
       get runs_path
       expect(response).to have_http_status(401)
     end
-
   end
 end
