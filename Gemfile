@@ -24,6 +24,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'letter_opener'
   gem 'brakeman', require: false
+  gem 'quiet_assets'
 end
 
 group :development, :test do
@@ -31,6 +32,8 @@ group :development, :test do
   gem 'web-console'
   gem 'spring'
   gem 'rubocop'
+  gem 'did_you_mean'
+  gem 'awesome_print'
 end
 
 group :test do
