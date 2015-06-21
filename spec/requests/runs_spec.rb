@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Runs', type: :request do
   describe 'GET /runs' do
-    it 'works! (now write some real specs)' do
-      get runs_path
+    it 'gets the runs' do
+      get runs_path(api_key: ENV['API_KEY'])
       expect(response).to have_http_status(200)
     end
   end

@@ -1,5 +1,4 @@
 require_relative 'code_climate'
-ENV['SKIP_AUTHENTICATION'] = 'skip'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
