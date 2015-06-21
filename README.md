@@ -23,7 +23,9 @@ https://simple-job-runner-testing.herokuapp.com
 ```sh
 git clone git@github.com:lukaselmer/simple-job-runner.git
 cd simple-job-runner
+ln -s ../../bin/check .git/hooks/pre-commit
 bundle install
+bin/check
 ```
 
 ## Configuration
@@ -38,7 +40,7 @@ cp config/application.example.yml config/application.yml
 Setup the database for development:
 
 ```sh
-bundle exec rake db:drop db:setup
+rake db:drop db:setup
 ```
 
 ## Tests
@@ -46,7 +48,7 @@ bundle exec rake db:drop db:setup
 ### Initialization
 
 ```sh
-RAILS_ENV=test rake db:create
+rake db:create:all
 ```
 
 ### Run Tests
@@ -55,16 +57,13 @@ RAILS_ENV=test rake db:create
 rspec
 ```
 
-### CI
-
-TODO: travis ci
-
 ## Run
 
 ```sh
-rails s -b 127.0.0.1
+rails s webrick
 ```
 
 ## Copyright
 
 Coypright 2015 [Lukas Elmer](https://github.com/lukaselmer).
+
