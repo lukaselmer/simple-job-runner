@@ -1,0 +1,29 @@
+h1 Listing runs
+
+table
+  thead
+    tr
+      th Algo parameters
+      th Started at
+      th Ended at
+      th Output
+      th Score
+      th
+      th
+      th
+
+  tbody
+    - @runs.each do |run|
+      tr
+        td = run.algo_parameters.to_json
+        td = run.started_at
+        td = run.ended_at
+        td = run.output
+        td = run.score
+        td = link_to 'Show', run
+        td = link_to 'Edit', edit_run_path(run)
+        td = link_to 'Destroy', run, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Run', new_run_path

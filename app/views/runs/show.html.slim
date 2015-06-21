@@ -1,0 +1,21 @@
+p#notice = notice
+
+p
+  strong Algo parameters:
+  = @run.algo_parameters
+p
+  strong Started at:
+  = @run.started_at
+p
+  strong Ended at:
+  = @run.ended_at
+p
+  strong Output:
+  = @run.output
+p
+  strong Score:
+  = @run.score
+
+= link_to 'Edit', edit_run_path(@run)
+'|
+= link_to 'Back', runs_path
