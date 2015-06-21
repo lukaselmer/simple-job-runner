@@ -16,7 +16,6 @@ gem 'jbuilder'
 gem 'figaro'
 gem 'devise'
 gem 'devise-i18n'
-gem 'rack-timeout'
 
 gem 'slim'
 gem 'slim-rails'
@@ -50,4 +49,5 @@ end
 group :production do
   gem 'puma'
   gem 'rails_12factor'
+  gem 'rack-timeout'
 end
