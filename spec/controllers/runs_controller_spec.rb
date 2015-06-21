@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe RunsController, type: :controller do
   let(:valid_attributes) do
-    { algo_parameters: { a: 20, b: 63 }.to_json, score: 10.5, output: "Blablabla\nScore: 10%\nBlabla" }
+    attributes_for(:ended_run)
   end
 
   let(:invalid_attributes) do
@@ -16,7 +16,7 @@ RSpec.describe RunsController, type: :controller do
 
   describe 'GET #index' do
     it 'assigns all runs as @runs' do
-      run = Run.create! valid_attributes
+      run = create(:ended_run)
       get :index, {}, valid_session
       expect(assigns(:runs)).to eq([run])
     end
@@ -24,7 +24,7 @@ RSpec.describe RunsController, type: :controller do
 
   describe 'GET #show' do
     it 'assigns the requested run as @run' do
-      run = Run.create! valid_attributes
+      run = create(:ended_run)
       get :show, { id: run.to_param }, valid_session
       expect(assigns(:run)).to eq(run)
     end
@@ -39,7 +39,7 @@ RSpec.describe RunsController, type: :controller do
 
   describe 'GET #edit' do
     it 'assigns the requested run as @run' do
-      run = Run.create! valid_attributes
+      run = create(:ended_run)
       get :edit, { id: run.to_param }, valid_session
       expect(assigns(:run)).to eq(run)
     end
@@ -85,7 +85,7 @@ RSpec.describe RunsController, type: :controller do
       end
 
       it 'updates the requested run' do
-        run = Run.create! valid_attributes
+        run = create(:ended_run)
         put :update, { id: run.to_param, run: new_attributes }, valid_session
         run.reload
         expect(run.algo_parameters).to eq('a' => 50, 'b' => 22)
@@ -94,13 +94,13 @@ RSpec.describe RunsController, type: :controller do
       end
 
       it 'assigns the requested run as @run' do
-        run = Run.create! valid_attributes
+        run = create(:ended_run)
         put :update, { id: run.to_param, run: valid_attributes }, valid_session
         expect(assigns(:run)).to eq(run)
       end
 
       it 'redirects to the run' do
-        run = Run.create! valid_attributes
+        run = create(:ended_run)
         put :update, { id: run.to_param, run: valid_attributes }, valid_session
         expect(response).to redirect_to(run)
       end
@@ -108,13 +108,13 @@ RSpec.describe RunsController, type: :controller do
 
     context 'with invalid params' do
       it 'assigns the run as @run' do
-        run = Run.create! valid_attributes
+        run = create(:ended_run)
         put :update, { id: run.to_param, run: invalid_attributes }, valid_session
         expect(assigns(:run)).to eq(run)
       end
 
       it "re-renders the 'edit' template" do
-        run = Run.create! valid_attributes
+        run = create(:ended_run)
         put :update, { id: run.to_param, run: invalid_attributes }, valid_session
         expect(response).to render_template('edit')
       end
@@ -123,14 +123,14 @@ RSpec.describe RunsController, type: :controller do
 
   describe 'DELETE #destroy' do
     it 'destroys the requested run' do
-      run = Run.create! valid_attributes
+      run = create(:ended_run)
       expect do
         delete :destroy, { id: run.to_param }, valid_session
       end.to change(Run, :count).by(-1)
     end
 
     it 'redirects to the runs list' do
-      run = Run.create! valid_attributes
+      run = create(:ended_run)
       delete :destroy, { id: run.to_param }, valid_session
       expect(response).to redirect_to(runs_url)
     end

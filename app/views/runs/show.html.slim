@@ -2,7 +2,7 @@ p#notice = notice
 
 p
   strong Algo parameters:
-  = @run.algo_parameters
+  = @run.algo_parameters.to_json
 p
   strong Started at:
   = @run.started_at

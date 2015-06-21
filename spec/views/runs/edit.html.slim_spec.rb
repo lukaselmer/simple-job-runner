@@ -2,11 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'runs/edit', type: :view do
   before(:each) do
-    @run = assign(:run, Run.create!(
-                          algo_parameters: { a: 10 },
-                          output: 'MyText',
-                          score: 20
-    ))
+    @run = assign(:run, build_stubbed(:ended_run))
   end
 
   it 'renders the edit run form' do

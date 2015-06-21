@@ -2,11 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'runs/new', type: :view do
   before(:each) do
-    assign(:run, Run.new(
-                   algo_parameters: { a: 10 },
-                   output: 'MyText',
-                   score: 20
-    ))
+    assign(:run, build(:ended_run))
   end
 
   it 'renders new run form' do

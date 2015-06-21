@@ -1,28 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe Run, type: :model do
-  let(:pending_run) do
-    Run.new(algo_parameters: { a: 20, b: 63 }.to_json, score: nil, output: '')
-  end
-
-  let(:started_run) do
-    Run.new(algo_parameters: { a: 20, b: 63 }.to_json, score: nil, output: '', started_at: Time.now)
-  end
-
   let(:ended_run) do
-    Run.new(algo_parameters: { a: 20, b: 63 }.to_json, score: 12.254, output: "Blablabla\nScore: 12.254%\nBlabla",
-            started_at: Time.now, ended_at: Time.now)
+    build(:ended_run)
   end
 
   it 'should check the validations' do
-    r = ended_run
-    expect(r.valid?).to be_truthy
-    r.algo_parameters = nil
-    expect(r.valid?).to be_falsey
+    expect(ended_run.valid?).to be_truthy
+    ended_run.algo_parameters = nil
+    expect(ended_run.valid?).to be_falsey
   end
 
   it 'should extract the correct score' do
-    r = ended_run
+    r = build(:ended_run)
     expect(r.extract_score).to be_within(0.00001).of(12.254)
     r.output = 'score: 12.254%'
     expect(r.extract_score).to be_within(0.00001).of(12.254)
@@ -35,31 +25,27 @@ RSpec.describe Run, type: :model do
   end
 
   it 'should update the score when the output has changed' do
-    r = ended_run
-    r.save!
-    expect(r.score).to be_within(0.00001).of(12.254)
-    r.update_attributes!(output: 'awefScore: 98.254%awef')
-    expect(r.score).to be_within(0.00001).of(98.254)
+    expect(ended_run.score).to be_within(0.00001).of(12.254)
+    ended_run.update_attributes!(output: 'awefScore: 98.254%awef')
+    expect(ended_run.score).to be_within(0.00001).of(98.254)
   end
 
   it 'should not update the score when the score cannot be parsed' do
-    r = ended_run
-    r.save!
-    expect(r.score).to be_within(0.00001).of(12.254)
-    r.update_attributes!(output: 'awefScore: NAN%awef')
-    expect(r.score).to be_within(0.00001).of(12.254)
+    expect(ended_run.score).to be_within(0.00001).of(12.254)
+    ended_run.update_attributes!(output: 'awefScore: NAN%awef')
+    expect(ended_run.score).to be_within(0.00001).of(12.254)
   end
 
   it 'should return the pending, started, ended runs' do
-    pending_run.dup.save!
-    pending_run.dup.save!
-    pending_run.dup.save!
-    pending_run.dup.save!
-    started_run.dup.save!
-    started_run.dup.save!
-    started_run.dup.save!
-    ended_run.dup.save!
-    ended_run.dup.save!
+    create(:pending_run)
+    create(:pending_run)
+    create(:pending_run)
+    create(:pending_run)
+    create(:started_run)
+    create(:started_run)
+    create(:started_run)
+    create(:ended_run)
+    create(:ended_run)
     expect(Run.pending.count).to eq(4)
     expect(Run.started.count).to eq(3)
     expect(Run.ended.count).to eq(2)
