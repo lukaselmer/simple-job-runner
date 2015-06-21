@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 def find_run_by_params(runs, param1, param2, param3)
-  runs.select do |run|
+  runs.find do |run|
     algo_parameters = run.algo_parameters
     algo_parameters['param1'] == param1 &&
       algo_parameters['param2'] == param2 &&
       algo_parameters['param3'] == param3
-  end.first
+  end
 end
 
 RSpec.describe RunsService, type: :service do
@@ -71,7 +71,6 @@ RSpec.describe RunsService, type: :service do
 
   describe 'schedule new runs' do
     it 'should schedule new runs (3*3*2)' do
-
       expect(Run.count).to eq(0)
       run_service.schedule_runs(param1: [5, 7, 9], param2: [1, 5], param3: [10, 20, 30])
       expect(Run.count).to eq(3 * 3 * 2)
