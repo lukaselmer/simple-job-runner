@@ -4,6 +4,13 @@ if ! command -v bundle > /dev/null; then
   source ~/.zshrc
 fi
 
+bundle exec rspec
+RC=$?
+if [ ! $RC -eq 0 ]; then
+  echo 'specs are not running, commit aborted!'
+  exit 1
+fi
+
 bundle exec rubocop -a -D -c .rubocop.yml
 RC=$?
 if [ ! $RC -eq 0 ]; then
