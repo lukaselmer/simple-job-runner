@@ -1,5 +1,14 @@
 require 'rails_helper'
 
+def find_run_by_params(runs, param1, param2, param3)
+  runs.select do |run|
+    algo_parameters = run.algo_parameters
+    algo_parameters['param1'] == param1 &&
+      algo_parameters['param2'] == param2 &&
+      algo_parameters['param3'] == param3
+  end.first
+end
+
 RSpec.describe RunsService, type: :service do
   let(:run_service) do
     RunsService.new
@@ -57,6 +66,60 @@ RSpec.describe RunsService, type: :service do
       expect(started_run_2.output).to eq("Bla\nScore: 85.32%\nXxxx")
       expect(started_run_2.ended_at).not_to be_nil
       expect(started_run_2.score).to be_within(0.0001).of(85.32)
+    end
+  end
+
+  describe 'schedule new runs' do
+    it 'should schedule new runs (3*3*2)' do
+
+      expect(Run.count).to eq(0)
+      run_service.schedule_runs(param1: [5, 7, 9], param2: [1, 5], param3: [10, 20, 30])
+      expect(Run.count).to eq(3 * 3 * 2)
+
+      runs = Run.all.to_a
+      expect(find_run_by_params(runs, 7, 1, 30)).not_to be_nil
+      expect(find_run_by_params(runs, 7, 5, 30)).not_to be_nil
+      expect(find_run_by_params(runs, 5, 5, 30)).not_to be_nil
+      expect(find_run_by_params(runs, 9, 5, 10)).not_to be_nil
+    end
+
+    it 'should schedule new runs (1*1*1)' do
+      expect(Run.count).to eq(0)
+      run_service.schedule_runs(param1: [5], param2: [1], param3: [15])
+      expect(Run.count).to eq(1)
+
+      runs = Run.all.to_a
+      expect(find_run_by_params(runs, 5, 1, 15)).not_to be_nil
+    end
+
+    it 'should schedule new runs (1*2*1)' do
+      expect(Run.count).to eq(0)
+      run_service.schedule_runs(param1: [5], param2: [1, 2], param3: [15])
+      expect(Run.count).to eq(2)
+
+      runs = Run.all.to_a
+      expect(find_run_by_params(runs, 5, 1, 15)).not_to be_nil
+      expect(find_run_by_params(runs, 5, 2, 15)).not_to be_nil
+    end
+
+    it 'should schedule new runs (1*2)' do
+      expect(Run.count).to eq(0)
+      run_service.schedule_runs(param1: [5], param2: [1, 2])
+      expect(Run.count).to eq(2)
+
+      runs = Run.all.to_a
+      expect(find_run_by_params(runs, 5, 1, nil)).not_to be_nil
+      expect(find_run_by_params(runs, 5, 2, nil)).not_to be_nil
+    end
+
+    it 'should schedule new runs (2)' do
+      expect(Run.count).to eq(0)
+      run_service.schedule_runs(param1: [7, 10])
+      expect(Run.count).to eq(2)
+
+      runs = Run.all.to_a
+      expect(find_run_by_params(runs, 7, nil, nil)).not_to be_nil
+      expect(find_run_by_params(runs, 10, nil, nil)).not_to be_nil
     end
   end
 end

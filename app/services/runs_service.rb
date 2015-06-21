@@ -18,4 +18,9 @@ class RunsService
     run.ended_at = Time.now
     run.save!
   end
+
+  def schedule_runs(parameters)
+    all = [nil].product(*parameters.values).map(&:compact).map { |v| { algo_parameters: parameters.keys.zip(v).to_h } }
+    Run.create!(all)
+  end
 end
