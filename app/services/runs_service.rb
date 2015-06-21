@@ -23,4 +23,9 @@ class RunsService
     all = [nil].product(*parameters.values).map(&:compact).map { |v| { algo_parameters: parameters.keys.zip(v).to_h } }
     Run.create!(all)
   end
+
+  def end_all
+    Run.pending.update_all(started_at: Time.now, ended_at: Time.now)
+    Run.started.update_all(ended_at: Time.now)
+  end
 end

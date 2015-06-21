@@ -121,4 +121,23 @@ RSpec.describe RunsService, type: :service do
       expect(find_run_by_params(runs, 10, nil, nil)).not_to be_nil
     end
   end
+
+  describe 'end all the runs' do
+    it 'should end all the runs' do
+      create(:pending_run)
+      started_at = 2.days.ago
+      started_run = create(:started_run, started_at: started_at)
+      ended_at = 3.days.ago
+      ended_run = create(:ended_run, ended_at: ended_at)
+      expect(Run.pending.count).to eq(1)
+      expect(Run.started.count).to eq(1)
+      run_service.end_all
+      expect(Run.pending.count).to eq(0)
+      expect(Run.started.count).to eq(0)
+      started_run.reload
+      ended_run.reload
+      expect(started_run.started_at).to eq(started_at)
+      expect(ended_run.ended_at).to eq(ended_at)
+    end
+  end
 end
