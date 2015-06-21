@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+source ~/.zshrc
+
 bundle exec rubocop -a -D -c .rubocop.yml
 RC=$?
 if [ ! $RC -eq 0 ]; then
