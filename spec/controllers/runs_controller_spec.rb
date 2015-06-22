@@ -45,6 +45,31 @@ RSpec.describe RunsController, type: :controller do
     end
   end
 
+  describe 'GET #start_random_pending_run' do
+    render_views
+
+    it 'assigns a @run which it gets from the service' do
+      run_mock = create(:pending_run)
+      runs_service_mock = double('Runs Service')
+      allow(controller).to receive(:runs_service).and_return(runs_service_mock)
+      allow(runs_service_mock).to receive(:start_random_pending_run).and_return(run_mock)
+      get :start_random_pending_run, valid_session
+      expect(assigns(:run)).to eq(run_mock)
+      id = run_mock.id.to_s
+      json = run_mock.algo_parameters.to_json
+      expect(response.body).to eq('{"result":"start","id":' + id + ',"algo_parameters":'+ json +'}')
+    end
+
+    it 'renders nothing when there are no pending runs' do
+      runs_service_mock = double('Runs Service')
+      allow(controller).to receive(:runs_service).and_return(runs_service_mock)
+      allow(runs_service_mock).to receive(:start_random_pending_run).and_return(nil)
+      get :start_random_pending_run, valid_session
+      expect(assigns(:run)).to eq(nil)
+      expect(response.body).to eq('{"result":"nothing"}')
+    end
+  end
+
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new Run' do

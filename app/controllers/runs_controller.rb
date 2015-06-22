@@ -6,6 +6,7 @@ class RunsController < ApplicationController
   end
 
   def show
+    render format: :json
   end
 
   def new
@@ -38,7 +39,17 @@ class RunsController < ApplicationController
     redirect_to runs_url, notice: 'Run was successfully destroyed.'
   end
 
+  def start_random_pending_run
+    @run = runs_service.start_random_pending_run
+    result = @run ? { result: :start, id: @run.id, algo_parameters: @run.algo_parameters } : { result: :nothing }
+    render json: result
+  end
+
   private
+
+  def runs_service
+    RunsService.new
+  end
 
   def set_run
     @run = Run.find(params[:id])
