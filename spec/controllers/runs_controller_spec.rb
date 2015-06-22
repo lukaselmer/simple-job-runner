@@ -1,5 +1,11 @@
 require 'rails_helper'
 
+def mock_controller_with_run_service(controller)
+  runs_service_mock = double('Runs Service')
+  allow(controller).to receive(:runs_service).and_return(runs_service_mock)
+  runs_service_mock
+end
+
 RSpec.describe RunsController, type: :controller do
   let(:valid_attributes) do
     attributes_for(:ended_run)
@@ -50,23 +56,32 @@ RSpec.describe RunsController, type: :controller do
 
     it 'assigns a @run which it gets from the service' do
       run_mock = create(:pending_run)
-      runs_service_mock = double('Runs Service')
-      allow(controller).to receive(:runs_service).and_return(runs_service_mock)
+      runs_service_mock = mock_controller_with_run_service(controller)
       allow(runs_service_mock).to receive(:start_random_pending_run).and_return(run_mock)
       get :start_random_pending_run, valid_session
       expect(assigns(:run)).to eq(run_mock)
       id = run_mock.id.to_s
       json = run_mock.algo_parameters.to_json
-      expect(response.body).to eq('{"result":"start","id":' + id + ',"algo_parameters":'+ json +'}')
+      expect(response.body).to eq('{"result":"start","id":' + id + ',"algo_parameters":' + json + '}')
     end
 
     it 'renders nothing when there are no pending runs' do
-      runs_service_mock = double('Runs Service')
-      allow(controller).to receive(:runs_service).and_return(runs_service_mock)
+      runs_service_mock = mock_controller_with_run_service(controller)
       allow(runs_service_mock).to receive(:start_random_pending_run).and_return(nil)
       get :start_random_pending_run, valid_session
       expect(assigns(:run)).to eq(nil)
       expect(response.body).to eq('{"result":"nothing"}')
+    end
+  end
+
+  describe 'GET #end_all' do
+    render_views
+
+    it 'calls end_all on the service' do
+      runs_service_mock = mock_controller_with_run_service(controller)
+      expect(runs_service_mock).to receive(:end_all)
+      get :end_all, valid_session
+      expect(response.body).to eq('')
     end
   end
 

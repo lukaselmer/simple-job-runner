@@ -45,6 +45,11 @@ class RunsController < ApplicationController
     render json: result
   end
 
+  def end_all
+    runs_service.end_all
+    render nothing: true
+  end
+
   private
 
   def runs_service
