@@ -24,9 +24,9 @@ h2 = "Ended (#{@runs.ended_total} total)"
 table.table.table-striped.table-hover
   thead
     tr
-      th Algo parameters
       th Ended at
       th Score
+      th Algo parameters
       th
   tbody
     - @runs.ended.each do |run|
