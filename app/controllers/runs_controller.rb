@@ -2,11 +2,7 @@ class RunsController < ApplicationController
   before_action :set_run, only: [:show, :edit, :update, :destroy, :report_results]
 
   def index
-    @runs = Run.all
-    return unless params[:created_at]
-
-    created_at = params[:created_at].to_datetime
-    @runs = @runs.where(created_at: (created_at - 15.seconds)..(created_at + 15.seconds))
+    @runs = RunsViewModel.new(params[:created_at])
   end
 
   def show

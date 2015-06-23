@@ -22,9 +22,15 @@ RSpec.describe RunsController, type: :controller do
 
   describe 'GET #index' do
     it 'assigns all runs as @runs' do
-      run = create(:ended_run)
+      pending_run = create(:pending_run)
+      started_run = create(:started_run)
+      ended_run = create(:ended_run)
+
       get :index, {}, valid_session
-      expect(assigns(:runs)).to eq([run])
+
+      expect(assigns(:runs).pending).to eq([pending_run])
+      expect(assigns(:runs).started).to eq([started_run])
+      expect(assigns(:runs).ended).to eq([ended_run])
     end
 
     it 'filters the @runs by created_at within +/-15 seconds' do
@@ -38,7 +44,15 @@ RSpec.describe RunsController, type: :controller do
       create(:ended_run, created_at: time3)
       create(:ended_run, created_at: time4)
       get :index, { created_at: filter_time }, valid_session
-      expect(assigns(:runs)).to eq([run1, run2])
+      expect(assigns(:runs).ended).to eq([run1, run2])
+    end
+
+    it 'sorts the @runs by ended_at (newest to oldest)' do
+      run1 = create(:ended_run, ended_at: 10.seconds.ago)
+      run2 = create(:ended_run, ended_at: 20.seconds.ago)
+      run3 = create(:ended_run, ended_at: 5.seconds.ago)
+      get :index, {}, valid_session
+      expect(assigns(:runs).ended).to eq([run3, run1, run2])
     end
   end
 
