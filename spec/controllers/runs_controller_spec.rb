@@ -55,7 +55,7 @@ RSpec.describe RunsController, type: :controller do
     render_views
 
     it 'assigns a @run which it gets from the service' do
-      run_mock = create(:pending_run)
+      run_mock = build_stubbed(:pending_run)
       runs_service_mock = mock_controller_with_run_service(controller)
       allow(runs_service_mock).to receive(:start_random_pending_run).and_return(run_mock)
       get :start_random_pending_run, valid_session
