@@ -88,7 +88,7 @@ RSpec.describe RunsController, type: :controller do
   describe 'GET #schedule_runs' do
     render_views
 
-    it 'calls end_all on the service' do
+    it 'calls schedule_runs on the service' do
       runs_service_mock = mock_controller_with_run_service(controller)
       algo_parameters = { param1: [10, 15], param2: [5] }
       expect(runs_service_mock).to receive(:schedule_runs).with(algo_parameters)
