@@ -19,7 +19,7 @@ table.table.table-striped.table-hover
         td = link_to 'Show', run
 
 
-h2 Ended
+h2 = "Ended (#{@runs.ended_total} total)"
 
 table.table.table-striped.table-hover
   thead
@@ -37,7 +37,7 @@ table.table.table-striped.table-hover
         td = link_to 'Show', run
 
 
-h2 Pending
+h2 = "Pending (#{@runs.pending_total} total)"
 
 table.table.table-striped.table-hover
   thead
