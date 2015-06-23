@@ -1,6 +1,6 @@
 class RunsController < ApplicationController
   before_action :set_run, only: [:show, :edit, :update, :destroy, :report_results]
-  skip_before_action :verify_authenticity_token, only: :report_results
+  skip_before_action :verify_authenticity_token, only: [:report_results, :schedule_runs]
 
   def index
     @runs = RunsViewModel.new(params[:created_at])
