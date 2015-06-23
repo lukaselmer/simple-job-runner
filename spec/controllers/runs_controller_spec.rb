@@ -133,7 +133,7 @@ RSpec.describe RunsController, type: :controller do
       runs_service_mock = mock_controller_with_run_service(controller)
       output = "A very very very long string\nScore: 55%\nSome more output"
       expect(runs_service_mock).to receive(:report_results).with(run, output)
-      get :report_results, { id: run.to_param, run: { output: output } }, valid_session
+      put :report_results, { id: run.to_param, run: { output: output } }, valid_session
       expect(assigns(:run)).to eq(run)
       expect(response.body).to eq('')
     end
