@@ -85,6 +85,18 @@ RSpec.describe RunsController, type: :controller do
     end
   end
 
+  describe 'GET #schedule_runs' do
+    render_views
+
+    it 'calls end_all on the service' do
+      runs_service_mock = mock_controller_with_run_service(controller)
+      algo_parameters = { param1: [10, 15], param2: [5] }
+      expect(runs_service_mock).to receive(:schedule_runs).with(algo_parameters)
+      get :schedule_runs, { algo_parameters: algo_parameters }, valid_session
+      expect(response.body).to eq('')
+    end
+  end
+
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new Run' do

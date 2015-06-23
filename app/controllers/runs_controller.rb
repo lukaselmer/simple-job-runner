@@ -50,6 +50,11 @@ class RunsController < ApplicationController
     render nothing: true
   end
 
+  def schedule_runs
+    runs_service.schedule_runs(params[:algo_parameters].map { |k, v| [k.to_sym, v.map(&:to_i)] }.to_h)
+    render nothing: true
+  end
+
   private
 
   def runs_service
