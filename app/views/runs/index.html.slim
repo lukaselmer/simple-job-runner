@@ -1,31 +1,66 @@
-h1 Listing runs
+h1 Runs
+
+
+h2 Best
+
+table.table.table-striped.table-hover
+  thead
+    tr
+      th Score
+      th Algo parameters
+      th Ended at
+      th
+  tbody
+    - @runs.best.each do |run|
+      tr
+        td = run.score
+        td = run.algo_parameters.to_json
+        td = "#{time_ago_in_words(run.ended_at)} ago"
+        td = link_to 'Show', run
+
+
+h2 = "Ended (#{@runs.ended_total} total)"
+
+table.table.table-striped.table-hover
+  thead
+    tr
+      th Ended at
+      th Score
+      th Algo parameters
+      th
+  tbody
+    - @runs.ended.each do |run|
+      tr
+        td = "#{time_ago_in_words(run.ended_at)} ago"
+        td = run.score
+        td = run.algo_parameters.to_json
+        td = link_to 'Show', run
+
+
+h2 = "Pending (#{@runs.pending_total} total)"
 
 table.table.table-striped.table-hover
   thead
     tr
       th Algo parameters
       th Created at
-      th Started at
-      th Ended at
-      th Output
-      th Score
-      th
-      th
-      th
-
   tbody
-    - @runs.each do |run|
+    - @runs.pending.each do |run|
       tr
         td = run.algo_parameters.to_json
         td = link_to("#{time_ago_in_words(run.created_at)} ago", runs_path(created_at: run.created_at))
-        td = run.started_at
-        td = run.ended_at
-        td = run.output
-        td = run.score
-        td = link_to 'Show', run
-        td = link_to 'Edit', edit_run_path(run)
-        td = link_to 'Destroy', run, data: {:confirm => 'Are you sure?'}, :method => :delete
 
-br
 
-= link_to 'New Run', new_run_path
+h2 Started
+
+table.table.table-striped.table-hover
+  thead
+    tr
+      th Algo parameters
+      th Started at
+  tbody
+    - @runs.started.each do |run|
+      tr
+        td = run.algo_parameters.to_json
+        td = link_to("#{time_ago_in_words(run.started_at)} ago", runs_path(created_at: run.created_at))
+

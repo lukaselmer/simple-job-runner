@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       get 'schedule_runs'
     end
     member do
-      get 'report_results'
+      put 'report_results'
     end
   end
 
