@@ -12,8 +12,7 @@ class RunsService
     run_to_start
   end
 
-  def report_results(id, output)
-    run = Run.find_by(id: id)
+  def report_results(run, output)
     run.output = output
     run.ended_at = Time.now
     run.save!

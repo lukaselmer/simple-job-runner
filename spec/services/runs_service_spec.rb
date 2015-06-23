@@ -61,7 +61,7 @@ RSpec.describe RunsService, type: :service do
       create(:started_run)
       started_run_2 = create(:started_run, algo_parameters: { xxx: 123 })
       expect(started_run_2.ended_at).to be_nil
-      run_service.report_results started_run_2.id, "Bla\nScore: 85.32%\nXxxx"
+      run_service.report_results started_run_2, "Bla\nScore: 85.32%\nXxxx"
       started_run_2.reload
       expect(started_run_2.output).to eq("Bla\nScore: 85.32%\nXxxx")
       expect(started_run_2.ended_at).not_to be_nil

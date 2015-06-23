@@ -5,6 +5,9 @@ Rails.application.routes.draw do
       get 'end_all'
       get 'schedule_runs'
     end
+    member do
+      get 'report_results'
+    end
   end
 
   get 'home/index'

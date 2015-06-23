@@ -1,5 +1,5 @@
 class RunsController < ApplicationController
-  before_action :set_run, only: [:show, :edit, :update, :destroy]
+  before_action :set_run, only: [:show, :edit, :update, :destroy, :report_results]
 
   def index
     @runs = Run.all
@@ -52,6 +52,11 @@ class RunsController < ApplicationController
 
   def schedule_runs
     runs_service.schedule_runs(params[:algo_parameters].map { |k, v| [k.to_sym, v.map(&:to_i)] }.to_h)
+    render nothing: true
+  end
+
+  def report_results
+    runs_service.report_results(@run, run_params[:output])
     render nothing: true
   end
 

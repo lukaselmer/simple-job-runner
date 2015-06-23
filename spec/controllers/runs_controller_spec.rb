@@ -97,6 +97,20 @@ RSpec.describe RunsController, type: :controller do
     end
   end
 
+  describe 'GET #report_results' do
+    render_views
+
+    it 'calls report_results on the service' do
+      run = create(:started_run)
+      runs_service_mock = mock_controller_with_run_service(controller)
+      output = "A very very very long string\nScore: 55%\nSome more output"
+      expect(runs_service_mock).to receive(:report_results).with(run, output)
+      get :report_results, { id: run.to_param, run: {output: output} }, valid_session
+      expect(assigns(:run)).to eq(run)
+      expect(response.body).to eq('')
+    end
+  end
+
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new Run' do
