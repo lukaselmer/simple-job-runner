@@ -1,8 +1,12 @@
 class RunsController < ApplicationController
-  before_action :set_run, only: [:show, :edit, :update, :destroy]
+  before_action :set_run, only: [:show, :edit, :update, :destroy, :report_results]
 
   def index
     @runs = Run.all
+    return unless params[:created_at]
+
+    created_at = params[:created_at].to_datetime
+    @runs = @runs.where(created_at: (created_at - 15.seconds)..(created_at + 15.seconds))
   end
 
   def show
@@ -47,6 +51,16 @@ class RunsController < ApplicationController
 
   def end_all
     runs_service.end_all
+    render nothing: true
+  end
+
+  def schedule_runs
+    runs_service.schedule_runs(params[:algo_parameters].map { |k, v| [k.to_sym, v.map(&:to_i)] }.to_h)
+    render nothing: true
+  end
+
+  def report_results
+    runs_service.report_results(@run, run_params[:output])
     render nothing: true
   end
 

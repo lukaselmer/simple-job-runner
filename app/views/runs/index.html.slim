@@ -1,9 +1,10 @@
 h1 Listing runs
 
-table
+table.table.table-striped.table-hover
   thead
     tr
       th Algo parameters
+      th Created at
       th Started at
       th Ended at
       th Output
@@ -16,6 +17,7 @@ table
     - @runs.each do |run|
       tr
         td = run.algo_parameters.to_json
+        td = link_to("#{time_ago_in_words(run.created_at)} ago", runs_path(created_at: run.created_at))
         td = run.started_at
         td = run.ended_at
         td = run.output

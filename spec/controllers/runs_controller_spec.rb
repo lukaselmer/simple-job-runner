@@ -26,6 +26,20 @@ RSpec.describe RunsController, type: :controller do
       get :index, {}, valid_session
       expect(assigns(:runs)).to eq([run])
     end
+
+    it 'filters the @runs by created_at within +/-15 seconds' do
+      filter_time = 10.days.ago
+      time1 = filter_time - 10.seconds
+      time2 = filter_time + 10.seconds
+      time3 = filter_time - 20.seconds
+      time4 = filter_time + 20.seconds
+      run1 = create(:ended_run, created_at: time1)
+      run2 = create(:ended_run, created_at: time2)
+      create(:ended_run, created_at: time3)
+      create(:ended_run, created_at: time4)
+      get :index, { created_at: filter_time }, valid_session
+      expect(assigns(:runs)).to eq([run1, run2])
+    end
   end
 
   describe 'GET #show' do
@@ -55,9 +69,9 @@ RSpec.describe RunsController, type: :controller do
     render_views
 
     it 'assigns a @run which it gets from the service' do
-      run_mock = create(:pending_run)
+      run_mock = build_stubbed(:pending_run)
       runs_service_mock = mock_controller_with_run_service(controller)
-      allow(runs_service_mock).to receive(:start_random_pending_run).and_return(run_mock)
+      expect(runs_service_mock).to receive(:start_random_pending_run).with(no_args).and_return(run_mock)
       get :start_random_pending_run, valid_session
       expect(assigns(:run)).to eq(run_mock)
       id = run_mock.id.to_s
@@ -67,7 +81,7 @@ RSpec.describe RunsController, type: :controller do
 
     it 'renders nothing when there are no pending runs' do
       runs_service_mock = mock_controller_with_run_service(controller)
-      allow(runs_service_mock).to receive(:start_random_pending_run).and_return(nil)
+      expect(runs_service_mock).to receive(:start_random_pending_run).with(no_args).and_return(nil)
       get :start_random_pending_run, valid_session
       expect(assigns(:run)).to eq(nil)
       expect(response.body).to eq('{"result":"nothing"}')
@@ -79,8 +93,34 @@ RSpec.describe RunsController, type: :controller do
 
     it 'calls end_all on the service' do
       runs_service_mock = mock_controller_with_run_service(controller)
-      expect(runs_service_mock).to receive(:end_all)
+      expect(runs_service_mock).to receive(:end_all).with(no_args)
       get :end_all, valid_session
+      expect(response.body).to eq('')
+    end
+  end
+
+  describe 'GET #schedule_runs' do
+    render_views
+
+    it 'calls schedule_runs on the service' do
+      runs_service_mock = mock_controller_with_run_service(controller)
+      algo_parameters = { param1: [10, 15], param2: [5] }
+      expect(runs_service_mock).to receive(:schedule_runs).with(algo_parameters)
+      get :schedule_runs, { algo_parameters: algo_parameters }, valid_session
+      expect(response.body).to eq('')
+    end
+  end
+
+  describe 'GET #report_results' do
+    render_views
+
+    it 'calls report_results on the service' do
+      run = create(:started_run)
+      runs_service_mock = mock_controller_with_run_service(controller)
+      output = "A very very very long string\nScore: 55%\nSome more output"
+      expect(runs_service_mock).to receive(:report_results).with(run, output)
+      get :report_results, { id: run.to_param, run: { output: output } }, valid_session
+      expect(assigns(:run)).to eq(run)
       expect(response.body).to eq('')
     end
   end

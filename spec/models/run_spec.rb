@@ -26,13 +26,13 @@ RSpec.describe Run, type: :model do
 
   it 'should update the score when the output has changed' do
     expect(ended_run.score).to be_within(0.00001).of(12.254)
-    ended_run.update_attributes!(output: 'awefScore: 98.254%awef')
+    ended_run.update!(output: 'awefScore: 98.254%awef')
     expect(ended_run.score).to be_within(0.00001).of(98.254)
   end
 
   it 'should not update the score when the score cannot be parsed' do
     expect(ended_run.score).to be_within(0.00001).of(12.254)
-    ended_run.update_attributes!(output: 'awefScore: NAN%awef')
+    ended_run.update!(output: 'awefScore: NAN%awef')
     expect(ended_run.score).to be_within(0.00001).of(12.254)
   end
 
