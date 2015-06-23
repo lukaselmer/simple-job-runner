@@ -26,6 +26,20 @@ RSpec.describe RunsController, type: :controller do
       get :index, {}, valid_session
       expect(assigns(:runs)).to eq([run])
     end
+
+    it 'filters the @runs by created_at within +/-15 seconds' do
+      filter_time = 10.days.ago
+      time1 = filter_time - 10.seconds
+      time2 = filter_time + 10.seconds
+      time3 = filter_time - 20.seconds
+      time4 = filter_time + 20.seconds
+      run1 = create(:ended_run, created_at: time1)
+      run2 = create(:ended_run, created_at: time2)
+      create(:ended_run, created_at: time3)
+      create(:ended_run, created_at: time4)
+      get :index, { created_at: filter_time }, valid_session
+      expect(assigns(:runs)).to eq([run1, run2])
+    end
   end
 
   describe 'GET #show' do

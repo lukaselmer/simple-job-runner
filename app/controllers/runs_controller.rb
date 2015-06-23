@@ -3,6 +3,10 @@ class RunsController < ApplicationController
 
   def index
     @runs = Run.all
+    return unless params[:created_at]
+    
+    created_at = params[:created_at].to_datetime
+    @runs = @runs.where(created_at: (created_at - 15.seconds)..(created_at + 15.seconds))
   end
 
   def show
