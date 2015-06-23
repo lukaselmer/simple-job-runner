@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     collection do
       get 'start_random_pending_run'
       get 'end_all'
-      get 'schedule_runs'
+      post 'schedule_runs'
     end
     member do
       put 'report_results'

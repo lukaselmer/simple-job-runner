@@ -120,7 +120,7 @@ RSpec.describe RunsController, type: :controller do
       runs_service_mock = mock_controller_with_run_service(controller)
       algo_parameters = { param1: [10, 15], param2: [5] }
       expect(runs_service_mock).to receive(:schedule_runs).with(algo_parameters)
-      get :schedule_runs, { algo_parameters: algo_parameters }, valid_session
+      post :schedule_runs, { algo_parameters: algo_parameters }, valid_session
       expect(response.body).to eq('')
     end
   end
