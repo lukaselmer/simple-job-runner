@@ -6,6 +6,7 @@ class Run < ActiveRecord::Base
   scope :pending, -> { where(started_at: nil) }
   scope :started, -> { where.not(started_at: nil).where(ended_at: nil) }
   scope :ended, -> { where.not(started_at: nil, ended_at: nil) }
+  scope :best, -> { ended.where.not(score: nil) }
 
   def extract_score
     result = output.scan(/Score: (\d+[,.]\d+)/i).first

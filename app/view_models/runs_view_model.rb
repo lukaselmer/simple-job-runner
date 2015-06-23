@@ -7,7 +7,7 @@ class RunsViewModel
     @pending = runs.pending.limit(20)
     @started = runs.started.order(:started_at)
     @ended = runs.ended.limit(20).order(ended_at: :desc)
-    @best = runs.ended.limit(20).order(score: :desc)
+    @best = runs.best.limit(20).order(score: :desc)
 
     init_totals(runs)
   end

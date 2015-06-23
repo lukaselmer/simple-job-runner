@@ -38,6 +38,7 @@ RSpec.describe RunsViewModel, type: :view_model do
       r1 = create(:ended_run, ended_at: 10.days.ago, score: 98, output: '')
       r2 = create(:ended_run, ended_at: 15.days.ago, score: 99, output: '')
       r3 = create(:ended_run, ended_at: 7.days.ago, score: 97, output: '')
+      create(:ended_run, ended_at: 7.days.ago, score: nil, output: 'error!')
       expect(RunsViewModel.new(nil).best).to eq([r2, r1, r3])
     end
 
