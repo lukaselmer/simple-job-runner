@@ -5,6 +5,10 @@ class RunsService
     return unless run_to_start
 
     run_to_start.with_lock do
+      # avoid concurrency problems
+      run_to_start.reload
+      return start_random_pending_run if run_to_start.started_at
+
       run_to_start.started_at = Time.now
       run_to_start.save!
     end
