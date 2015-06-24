@@ -45,7 +45,7 @@ group :test do
 end
 
 group :production do
-  gem 'puma'
+  gem 'passenger'
   gem 'rails_12factor'
   gem 'rack-timeout'
 end
