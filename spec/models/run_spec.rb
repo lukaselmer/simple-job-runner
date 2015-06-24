@@ -50,4 +50,39 @@ RSpec.describe Run, type: :model do
     expect(Run.started.count).to eq(3)
     expect(Run.ended.count).to eq(2)
   end
+
+  describe '#cleanup_output' do
+    it 'should call #cleanup_output before save' do
+      run = build(:ended_run)
+      expect(run).to receive(:cleanup_output).with(no_args)
+      run.run_callbacks(:save)
+    end
+
+    it 'should work if output is nil' do
+      run = build(:ended_run, output: nil)
+      run.cleanup_output
+      expect(run.output).to be_nil
+    end
+
+    it 'should cleanup the gensim progress' do
+      output = "blabla\nblabla gensim ffwef INFO - PROGRESS: at blalbla\nxxxx\n" * 2
+      run = build(:ended_run, output: output)
+      run.cleanup_output
+      expect(run.output).to eq("blabla\nxxxx\n" * 2)
+    end
+
+    it 'should cleanup numpy storing events' do
+      output = "blabla\nabcgensim.utils - INFO - storing numpy array 'syn1' todef\nxxxx\n" * 2
+      run = build(:ended_run, output: output)
+      run.cleanup_output
+      expect(run.output).to eq("blabla\nxxxx\n" * 2)
+    end
+
+    it 'should cleanup reached the end of input events' do
+      output = "blabla\ncgensimX INFO Xreached ihu input awefawef outstanding jobs\nxxxx\n" * 2
+      run = build(:ended_run, output: output)
+      run.cleanup_output
+      expect(run.output).to eq("blabla\nxxxx\n" * 2)
+    end
+  end
 end
