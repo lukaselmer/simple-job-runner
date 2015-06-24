@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     end
     member do
       put 'report_results'
+      get 'restart'
     end
   end
 

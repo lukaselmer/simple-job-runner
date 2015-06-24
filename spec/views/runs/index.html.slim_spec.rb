@@ -30,6 +30,7 @@ RSpec.describe 'runs/index', type: :view do
 
     expect(rendered).to include(ERB::Util.html_escape(@started_run_1.algo_parameters.to_json))
     expect(rendered).to include('17 days ago')
+    expect(rendered).to include('Restart')
   end
 
   it 'renders the ended runs' do

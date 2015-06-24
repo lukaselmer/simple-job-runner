@@ -156,4 +156,13 @@ RSpec.describe RunsService, type: :service do
       expect(ended_run.ended_at.to_i).to eq(ended_at.to_i)
     end
   end
+
+  describe '#restart a run' do
+    it 'should restart a started run' do
+      run = create(:started_run)
+      run_service.restart(run)
+      run.reload
+      expect(run.started_at).to be_nil
+    end
+  end
 end

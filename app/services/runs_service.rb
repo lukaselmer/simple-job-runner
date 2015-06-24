@@ -31,4 +31,8 @@ class RunsService
     Run.pending.update_all(started_at: Time.now, ended_at: Time.now)
     Run.started.update_all(ended_at: Time.now)
   end
+
+  def restart(run)
+    run.update!(started_at: nil)
+  end
 end

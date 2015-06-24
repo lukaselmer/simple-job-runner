@@ -58,9 +58,11 @@ table.table.table-striped.table-hover
     tr
       th Algo parameters
       th Started at
+      th
   tbody
     - @runs.started.each do |run|
       tr
         td = run.algo_parameters.to_json
         td = link_to("#{time_ago_in_words(run.started_at)} ago", runs_path(created_at: run.created_at))
+        td = link_to('Restart', restart_run_path(run))
 

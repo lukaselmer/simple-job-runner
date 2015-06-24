@@ -172,6 +172,18 @@ RSpec.describe RunsController, type: :controller do
     end
   end
 
+  describe 'GET #restart' do
+    render_views
+
+    it 'calls restart on the service' do
+      run = create(:started_run)
+      runs_service_mock = mock_controller_with_run_service(controller)
+      expect(runs_service_mock).to receive(:restart).with(run)
+      get :restart, { id: run.to_param }, valid_session
+      expect(response).to redirect_to(runs_url)
+    end
+  end
+
   describe 'PUT #update' do
     context 'with valid params' do
       let(:new_attributes) do

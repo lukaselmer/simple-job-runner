@@ -1,5 +1,5 @@
 class RunsController < ApplicationController
-  before_action :set_run, only: [:show, :edit, :update, :destroy, :report_results]
+  before_action :set_run, only: [:show, :edit, :update, :destroy, :report_results, :restart]
   skip_before_action :verify_authenticity_token, only: [:report_results, :schedule_runs]
 
   def index
@@ -59,6 +59,11 @@ class RunsController < ApplicationController
   def report_results
     runs_service.report_results(@run, run_params[:output])
     render nothing: true
+  end
+
+  def restart
+    runs_service.restart(@run)
+    redirect_to runs_path
   end
 
   private
