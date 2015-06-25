@@ -21,14 +21,14 @@ class Run < ActiveRecord::Base
   def cleanup_output
     return unless output
 
-    cleanup_output_with(/\n.*gensim.*INFO.*PROGRESS: at.*\n/)
-    cleanup_output_with(/\n.*gensim.*INFO.*storing numpy array.*\n/)
-    cleanup_output_with(/\n.*gensim.*INFO.*reached.*input.*outstanding jobs.*\n/)
+    cleanup_output_with(/.*gensim.*INFO.*PROGRESS: at.*\n/)
+    cleanup_output_with(/.*gensim.*INFO.*storing numpy array.*\n/)
+    cleanup_output_with(/.*gensim.*INFO.*reached.*input.*outstanding jobs.*\n/)
   end
 
   private
 
   def cleanup_output_with(pattern)
-    self.output = output.gsub(pattern, "\n")
+    self.output = output.gsub(pattern, '')
   end
 end

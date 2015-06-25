@@ -65,21 +65,24 @@ RSpec.describe Run, type: :model do
     end
 
     it 'should cleanup the gensim progress' do
-      output = "blabla\nblabla gensim ffwef INFO - PROGRESS: at blalbla\nxxxx\n" * 2
+      bad = 'bbla gensim ff INFO - PROGRESS: at ba'
+      output = "blabla\n#{bad}\n#{bad}\n#{bad}\nxxxx\n" * 2
       run = build(:ended_run, output: output)
       run.cleanup_output
       expect(run.output).to eq("blabla\nxxxx\n" * 2)
     end
 
     it 'should cleanup numpy storing events' do
-      output = "blabla\nabcgensim.utils - INFO - storing numpy array 'syn1' todef\nxxxx\n" * 2
+      bad = "abcgensim.utils - INFO - storing numpy array 'syn1' todef"
+      output = "blabla\n#{bad}\n#{bad}\n#{bad}\nxxxx\n" * 2
       run = build(:ended_run, output: output)
       run.cleanup_output
       expect(run.output).to eq("blabla\nxxxx\n" * 2)
     end
 
     it 'should cleanup reached the end of input events' do
-      output = "blabla\ncgensimX INFO Xreached ihu input awefawef outstanding jobs\nxxxx\n" * 2
+      bad = 'cgensimX INFO Xreached ihu input awefawef outstanding jobs'
+      output = "blabla\n#{bad}\n#{bad}\n#{bad}\nxxxx\n" * 2
       run = build(:ended_run, output: output)
       run.cleanup_output
       expect(run.output).to eq("blabla\nxxxx\n" * 2)
