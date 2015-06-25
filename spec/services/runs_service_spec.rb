@@ -81,6 +81,15 @@ RSpec.describe RunsService, type: :service do
       expect(run_service.start_random_pending_run(host_name_1)).to be_nil
     end
 
+    it 'should set the host name when a run is started' do
+      run = create(:pending_run, algo_parameters: algo_parameters_with_20_epochs)
+      started_run = run_service.start_random_pending_run(host_name_2)
+      expect(started_run.host_name).to eq(host_name_2)
+      run.reload
+      expect(run.host_name).to eq(host_name_2)
+      expect(started_run.host_name).to eq(host_name_2)
+    end
+
     it 'should get the run with different epochs and same parameters to the same host' do
       create(:ended_run, algo_parameters: algo_parameters_with_10_epochs, host_name: host_name_1)
       run = create(:pending_run, algo_parameters: algo_parameters_with_20_epochs)

@@ -9,6 +9,7 @@ class RunsService
       run_to_start.reload
       return nil if run_to_start.started_at
 
+      run_to_start.host_name = host_name
       run_to_start.started_at = Time.now
       run_to_start.save!
     end
