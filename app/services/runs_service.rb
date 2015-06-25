@@ -1,20 +1,20 @@
 class RunsService
   def start_random_pending_run(host_name)
-    run_to_start = possible_pending_runs(host_name).sample
-
-    return unless run_to_start
-
-    run_to_start.with_lock do
+    Run.transaction do
       # avoid concurrency problems
+      run_to_start = possible_pending_runs(host_name).sample
+
+      return unless run_to_start
+
       run_to_start.reload
       return nil if run_to_start.started_at
 
       run_to_start.host_name = host_name
       run_to_start.started_at = Time.now
       run_to_start.save!
-    end
 
-    run_to_start
+      run_to_start
+    end
   end
 
   def report_results(run, output)
