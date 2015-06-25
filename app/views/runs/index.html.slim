@@ -28,6 +28,7 @@ table.table.table-striped.table-hover
       th Score
       th Algo parameters
       th
+      th
   tbody
     - @runs.ended.each do |run|
       tr
@@ -35,6 +36,7 @@ table.table.table-striped.table-hover
         td = run.score
         td = run.algo_parameters.to_json
         td = link_to 'Show', run
+        td = link_to 'Restart', restart_run_path(run)
 
 
 h2 = "Pending (#{@runs.pending_total} total)"

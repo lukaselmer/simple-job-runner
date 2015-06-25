@@ -33,6 +33,6 @@ class RunsService
   end
 
   def restart(run)
-    run.update!(started_at: nil)
+    run.update!(started_at: nil, ended_at: nil)
   end
 end
