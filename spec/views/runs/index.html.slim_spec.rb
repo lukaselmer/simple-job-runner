@@ -43,6 +43,7 @@ RSpec.describe 'runs/index', type: :view do
     expect(rendered).to include('25 days ago')
     expect(rendered).to include('23 days ago')
     expect(rendered).to include('Ended (999 total)')
+    expect(rendered).to include('Restart')
   end
 
   it 'renders the best runs' do
