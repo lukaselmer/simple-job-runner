@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'visualizations/x_vs_y'
+
   resources :runs do
     collection do
       get 'start_random_pending_run'
