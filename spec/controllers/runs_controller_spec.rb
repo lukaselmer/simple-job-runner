@@ -85,8 +85,8 @@ RSpec.describe RunsController, type: :controller do
     it 'assigns a @run which it gets from the service' do
       run_mock = build_stubbed(:pending_run)
       runs_service_mock = mock_controller_with_run_service(controller)
-      expect(runs_service_mock).to receive(:start_random_pending_run).with(no_args).and_return(run_mock)
-      get :start_random_pending_run, valid_session
+      expect(runs_service_mock).to receive(:start_random_pending_run).with('host1').and_return(run_mock)
+      get :start_random_pending_run, { host_name: 'host1' }, valid_session
       expect(assigns(:run)).to eq(run_mock)
       id = run_mock.id.to_s
       json = run_mock.algo_parameters.to_json
@@ -95,8 +95,8 @@ RSpec.describe RunsController, type: :controller do
 
     it 'renders nothing when there are no pending runs' do
       runs_service_mock = mock_controller_with_run_service(controller)
-      expect(runs_service_mock).to receive(:start_random_pending_run).with(no_args).and_return(nil)
-      get :start_random_pending_run, valid_session
+      expect(runs_service_mock).to receive(:start_random_pending_run).with('host1').and_return(nil)
+      get :start_random_pending_run, { host_name: 'host1' }, valid_session
       expect(assigns(:run)).to eq(nil)
       expect(response.body).to eq('{"result":"nothing"}')
     end

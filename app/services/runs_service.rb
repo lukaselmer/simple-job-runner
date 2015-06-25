@@ -1,6 +1,6 @@
 class RunsService
-  def start_random_pending_run
-    run_to_start = Run.pending.to_a.sample
+  def start_random_pending_run(host_name)
+    run_to_start = possible_pending_runs(host_name).sample
 
     return unless run_to_start
 
@@ -34,5 +34,27 @@ class RunsService
 
   def restart(run)
     run.update!(started_at: nil, ended_at: nil)
+  end
+
+  private
+
+  def possible_pending_runs(host_name)
+    pending_runs = Run.pending.to_a
+    started_runs = Run.started.to_a
+    ended_runs = Run.ended.to_a
+    pending_runs.select do |pending_run|
+      started_runs.none? do |started_run|
+        similar_algo_parameters?(pending_run, started_run)
+      end && ended_runs.none? do |ended_run|
+        similar_algo_parameters?(pending_run, ended_run) && host_name != ended_run.host_name
+      end
+    end
+  end
+
+  def similar_algo_parameters?(pending_run, started_run)
+    pending_algo_parameters = pending_run.algo_parameters
+    started_algo_parameters = started_run.algo_parameters.dup
+    started_algo_parameters['epochs'] = pending_algo_parameters['epochs']
+    started_algo_parameters == pending_algo_parameters
   end
 end

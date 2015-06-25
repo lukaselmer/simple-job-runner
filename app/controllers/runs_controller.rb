@@ -41,7 +41,7 @@ class RunsController < ApplicationController
   end
 
   def start_random_pending_run
-    @run = runs_service.start_random_pending_run
+    @run = runs_service.start_random_pending_run params[:host_name]
     result = @run ? { result: :start, id: @run.id, algo_parameters: @run.algo_parameters } : { result: :nothing }
     render json: result
   end

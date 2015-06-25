@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'runs/show', type: :view do
   before(:each) do
-    @run = assign(:run, build_stubbed(:ended_run, score: 27.5))
+    @run = assign(:run, build_stubbed(:ended_run, score: 27.5, algo_parameters: { a: 20, b: 63 }))
   end
 
   it 'renders attributes in <p>' do
