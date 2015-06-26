@@ -6,8 +6,6 @@ $ ->
       line:
         dataLabels:
           enabled: true
-      title:
-        text: 'Logarithmic axis demo'
       xAxis:
         type: 'numeric'
         tickInterval: 5
