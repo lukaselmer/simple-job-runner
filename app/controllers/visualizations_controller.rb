@@ -1,6 +1,6 @@
 class VisualizationsController < ApplicationController
-  def x_vs_y
-    @charts = visualization_service.charts(params[:x].to_sym, params[:y].to_sym)
+  def x_vs_score
+    @charts = visualization_service.charts(params[:x])
   end
 
   private

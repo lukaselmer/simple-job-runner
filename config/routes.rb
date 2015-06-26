@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'visualizations/x_vs_y'
+  get 'visualizations/x_vs_score/:x', to: 'visualizations#x_vs_score'
 
   resources :runs do
     collection do

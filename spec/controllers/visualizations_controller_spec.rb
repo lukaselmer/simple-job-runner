@@ -9,11 +9,11 @@ end
 RSpec.describe VisualizationsController, type: :controller do
   let(:valid_session) { { api_key: ENV['API_KEY'] } }
 
-  describe 'GET #x_vs_y' do
+  describe 'GET #x_vs_score' do
     it 'returns http success' do
       mocked_service = mock_controller_with_visualization_service(controller)
-      expect(mocked_service).to receive(:charts).with(:epochs, :score).and_return(:magic)
-      get :x_vs_y, { x: :epochs, y: :score }, valid_session
+      expect(mocked_service).to receive(:charts).with('epochs').and_return(:magic)
+      get :x_vs_score, { x: :epochs }, valid_session
       expect(response).to have_http_status(:success)
       expect(assigns(:charts)).to eq(:magic)
     end

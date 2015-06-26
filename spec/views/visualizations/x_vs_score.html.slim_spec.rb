@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'visualizations/x_vs_y.html.slim', type: :view do
+RSpec.describe 'visualizations/x_vs_score.html.slim', type: :view do
   #  before(:each) do
   #   @ended_run_1 = build_stubbed(:ended_run, host_name: 'ended_host1', score: 99, ended_at: 25.days.ago)
   #   @ended_run_2 = build_stubbed(:ended_run, host_name: 'ended_host2', score: 34.5, ended_at: 23.days.ago)
