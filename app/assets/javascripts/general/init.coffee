@@ -10,11 +10,11 @@ $ ->
         type: 'numeric'
         tickInterval: 5
       yAxis:
-        min: 0
+        min: 70
         max: 100
         type: 'numeric'
-        minorTickInterval: 10
-        tickInterval: 20
+        minorTickInterval: 1
+        tickInterval: 5
       tooltip:
         # headerFormat: '<b>{series.name}</b><br />',
         pointFormat: 'epoch = {point.x}, score = {point.y}'
