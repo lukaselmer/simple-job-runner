@@ -1,13 +1,22 @@
 require 'ostruct'
 
 class VisualizationService
+  def initialize(minimum_points_per_chart = 3)
+    @minimum_points_per_chart = minimum_points_per_chart
+  end
+
   def charts(x)
     structured_runs = structured_runs(x)
     grouped_runs = grouped_runs(structured_runs)
-    ordered_grouped_values(grouped_runs)
+    ordered_grouped_values = ordered_grouped_values(grouped_runs)
+    filter_groups_without_enough_data(ordered_grouped_values)
   end
 
   private
+
+  def filter_groups_without_enough_data(ordered_grouped_values)
+    ordered_grouped_values.select { |_, elements| elements.count > @minimum_points_per_chart }
+  end
 
   def ordered_grouped_values(grouped_runs)
     grouped_runs.reverse.map do |params_without_x, hsh_group|
