@@ -1,7 +1,7 @@
 require 'ostruct'
 
 class VisualizationService
-  def graphs(x)
+  def charts(x)
     structured_runs = structured_runs(x)
     grouped_runs = grouped_runs(structured_runs)
     ordered_grouped_values(grouped_runs)
@@ -22,7 +22,7 @@ class VisualizationService
   end
 
   def structured_runs(x)
-    all_runs.select { |run| run.algo_parameters.key?(x) }.map do |run|
+    all_runs.select { |run| run.algo_parameters.key?(x) && run.score }.map do |run|
       params_without_x = run.algo_parameters.dup
       x_value = params_without_x.delete(x)
       OpenStruct.new(params_without_x: params_without_x, x_value: x_value, score: run.score)

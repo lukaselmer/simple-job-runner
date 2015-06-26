@@ -1,2 +1,5 @@
-h1 Visualizations#x_vs_score
-p Find me in app/views/visualizations/x_vs_score.html.slim
+h1 X vs Score
+
+- @charts.each do |algo_parameters, chart|
+  h2 = "Results for #{algo_parameters.to_a.map { |k, v| "#{k}=#{v}" }.sort.join(' ')}"
+  div.chart data-chart=chart.to_json
