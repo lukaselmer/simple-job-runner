@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   resources :runs do
     collection do
+      get 'possible_pending'
       get 'start_random_pending_run'
       get 'end_all'
       post 'schedule_runs'

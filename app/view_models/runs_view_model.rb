@@ -31,7 +31,7 @@ class RunsViewModel
   end
 
   def select_fields(runs)
-    runs.select(:id, :score, :algo_parameters, :started_at, :ended_at, :host_name)
+    runs.select(:id, :score, :algo_parameters, :started_at, :ended_at, :host_name, :created_at)
   end
 
   def init_totals(runs)

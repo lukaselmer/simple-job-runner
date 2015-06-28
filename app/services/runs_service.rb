@@ -37,7 +37,18 @@ class RunsService
     run.update!(started_at: nil, ended_at: nil)
   end
 
+  def possible_pending_runs_by_host_name
+    host_names = ['any'] + find_host_names
+    host_names.map do |host_name|
+      [host_name, possible_pending_runs(host_name)]
+    end.to_h
+  end
+
   private
+
+  def find_host_names
+    Run.all.select('host_name').map(&:host_name).reject(&:blank?).uniq
+  end
 
   def possible_pending_runs(host_name)
     pending_runs = Run.pending.to_a

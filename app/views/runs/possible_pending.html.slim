@@ -1,0 +1,16 @@
+h1 Possible Pending Runs
+
+- @possible_pending_runs_by_host_name.each do |host_name, pending_runs|
+
+  h2 Host: #{host_name}
+
+  table.table.table-striped.table-hover
+    thead
+      tr
+        th Algo parameters
+        th
+    tbody
+    - pending_runs.each do |run|
+      tr
+        td = run.algo_parameters.map { |k, v| "#{k}=#{v}" }.sort.join(' ')
+        td = link_to 'Show', run
