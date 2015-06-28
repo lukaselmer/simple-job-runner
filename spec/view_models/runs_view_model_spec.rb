@@ -46,5 +46,16 @@ RSpec.describe RunsViewModel, type: :view_model do
       21.times { create(:ended_run) }
       expect(RunsViewModel.new(nil).best.count).to eq(20)
     end
+
+    it 'should not include the output for performance reasons' do
+      create(:ended_run, output: 'some')
+      create(:pending_run, output: 'some')
+      create(:started_run, output: 'some')
+      vm = RunsViewModel.new(nil)
+      expect { vm.pending.first.output }.to raise_error(ActiveModel::MissingAttributeError)
+      expect { vm.started.first.output }.to raise_error(ActiveModel::MissingAttributeError)
+      expect { vm.ended.first.output }.to raise_error(ActiveModel::MissingAttributeError)
+      expect { vm.best.first.output }.to raise_error(ActiveModel::MissingAttributeError)
+    end
   end
 end
