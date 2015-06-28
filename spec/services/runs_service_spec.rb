@@ -87,7 +87,8 @@ RSpec.describe RunsService, type: :service do
 
   describe '#possible_pending_runs_by_host_name' do
     it 'should get a hash with any if no runs exist' do
-      expect(run_service).to receive(:possible_pending_runs).with('any').and_return([:a, :b])
+      allow(run_service).to receive(:find_run_groups).and_return(:xxx)
+      expect(run_service).to receive(:possible_pending_runs_with).with('any', :xxx).and_return([:a, :b])
       result = run_service.possible_pending_runs_by_host_name
       expect(result).to eq('any' => [:a, :b])
     end
@@ -97,7 +98,8 @@ RSpec.describe RunsService, type: :service do
       create(:started_run, algo_parameters: { a: 10 }, host_name: 'x')
       create(:started_run, algo_parameters: { a: 12 }, host_name: 'x')
       create(:started_run, algo_parameters: { a: 20 }, host_name: 'z')
-      expect(run_service).to receive(:possible_pending_runs).with(/any|x|z/).and_return([:a], [:b], [:c])
+      allow(run_service).to receive(:find_run_groups).and_return(:xxx)
+      expect(run_service).to receive(:possible_pending_runs_with).with(/any|x|z/, :xxx).and_return([:a], [:b], [:c])
       result = run_service.possible_pending_runs_by_host_name
       expect(result).to eq('any' => [:a], 'x' => [:b], 'z' => [:c])
     end
