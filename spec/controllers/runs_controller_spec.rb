@@ -56,6 +56,15 @@ RSpec.describe RunsController, type: :controller do
     end
   end
 
+  describe 'GET #possible_pending' do
+    it 'should get the possible pending runs with a new hostname' do
+      runs_service_mock = mock_controller_with_run_service(controller)
+      expect(runs_service_mock).to receive(:possible_pending_runs_by_host_name).with(no_args).and_return([:x])
+      get :possible_pending, { host_name: 'any' }, valid_session
+      expect(assigns(:possible_pending_runs_by_host_name)).to eq([:x])
+    end
+  end
+
   describe 'GET #show' do
     it 'assigns the requested run as @run' do
       run = create(:ended_run)

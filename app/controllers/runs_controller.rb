@@ -6,6 +6,10 @@ class RunsController < ApplicationController
     @runs = RunsViewModel.new(params[:created_at])
   end
 
+  def possible_pending
+    @possible_pending_runs_by_host_name = runs_service.possible_pending_runs_by_host_name
+  end
+
   def show
     render format: :json
   end

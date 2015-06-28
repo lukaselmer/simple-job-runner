@@ -34,7 +34,7 @@ RSpec.describe RunsService, type: :service do
     { epochs: 20, a: 33, b: 44 }
   end
 
-  describe 'start random pending run' do
+  describe '#start_random_pending_run' do
     it 'should get no run if no runs exist' do
       expect(run_service.start_random_pending_run(host_name_1)).to be_nil
     end
@@ -42,12 +42,6 @@ RSpec.describe RunsService, type: :service do
     it 'should get the first run if one pending run exists' do
       pending_run = create(:pending_run)
       expect(run_service.start_random_pending_run(host_name_1)).to eq(pending_run)
-    end
-
-    it 'should get no run if no pending run exists' do
-      create(:started_run)
-      create(:ended_run)
-      expect(run_service.start_random_pending_run(host_name_1)).to eq(nil)
     end
 
     it 'should get a random pending run' do
@@ -75,12 +69,6 @@ RSpec.describe RunsService, type: :service do
       expect(run_service.start_random_pending_run(host_name_1)).to be_nil
     end
 
-    it 'should not get the run with different epochs and same parameters while one is running' do
-      create(:pending_run, algo_parameters: algo_parameters_with_10_epochs)
-      create(:started_run, algo_parameters: algo_parameters_with_20_epochs)
-      expect(run_service.start_random_pending_run(host_name_1)).to be_nil
-    end
-
     it 'should set the host name when a run is started' do
       run = create(:pending_run, algo_parameters: algo_parameters_with_20_epochs)
       started_run = run_service.start_random_pending_run(host_name_2)
@@ -90,16 +78,63 @@ RSpec.describe RunsService, type: :service do
       expect(started_run.host_name).to eq(host_name_2)
     end
 
-    it 'should get the run with different epochs and same parameters to the same host' do
-      create(:ended_run, algo_parameters: algo_parameters_with_10_epochs, host_name: host_name_1)
-      run = create(:pending_run, algo_parameters: algo_parameters_with_20_epochs)
-      expect(run_service.start_random_pending_run(host_name_1)).to eq(run)
+    it 'should get no run if no pending run exists' do
+      create(:started_run)
+      create(:ended_run)
+      expect(run_service.start_random_pending_run(host_name_1)).to eq(nil)
+    end
+  end
+
+  describe '#possible_pending_runs_by_host_name' do
+    it 'should get a hash with any if no runs exist' do
+      expect(run_service).to receive(:possible_pending_runs).with('any').and_return([:a, :b])
+      result = run_service.possible_pending_runs_by_host_name
+      expect(result).to eq('any' => [:a, :b])
+    end
+
+    it 'should get a hash with every host and the possible runs' do
+      create(:pending_run, algo_parameters: { a: 30 })
+      create(:started_run, algo_parameters: { a: 10 }, host_name: 'x')
+      create(:started_run, algo_parameters: { a: 12 }, host_name: 'x')
+      create(:started_run, algo_parameters: { a: 20 }, host_name: 'z')
+      expect(run_service).to receive(:possible_pending_runs).with(/any|x|z/).and_return([:a], [:b], [:c])
+      result = run_service.possible_pending_runs_by_host_name
+      expect(result).to eq('any' => [:a], 'x' => [:b], 'z' => [:c])
+    end
+  end
+
+  describe '#possible_pending_runs' do
+    it 'should get an empty array if no runs exist' do
+      expect(run_service.send(:possible_pending_runs, host_name_1)).to be_empty
+    end
+
+    it 'should get an array with one run if one pending run exists' do
+      pending_run = create(:pending_run)
+      expect(run_service.send(:possible_pending_runs, host_name_1)).to eq([pending_run])
     end
 
     it 'should not get the run with different epochs and same parameters to a different host' do
       create(:ended_run, algo_parameters: algo_parameters_with_10_epochs, host_name: host_name_1)
       create(:pending_run, algo_parameters: algo_parameters_with_20_epochs)
-      expect(run_service.start_random_pending_run(host_name_2)).to be_nil
+      expect(run_service.send(:possible_pending_runs, host_name_2)).to be_empty
+    end
+
+    it 'should get the run with different epochs and same parameters to the same host' do
+      create(:ended_run, algo_parameters: algo_parameters_with_10_epochs, host_name: host_name_1)
+      run = create(:pending_run, algo_parameters: algo_parameters_with_20_epochs)
+      expect(run_service.send(:possible_pending_runs, host_name_1)).to eq([run])
+    end
+
+    it 'should not get the run with different epochs and same parameters while one is running' do
+      create(:pending_run, algo_parameters: algo_parameters_with_10_epochs)
+      create(:started_run, algo_parameters: algo_parameters_with_20_epochs)
+      expect(run_service.send(:possible_pending_runs, host_name_1)).to be_empty
+    end
+
+    it 'should get an empty array no pending run exists' do
+      create(:started_run)
+      create(:ended_run)
+      expect(run_service.send(:possible_pending_runs, host_name_1)).to eq([])
     end
   end
 
