@@ -11,19 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150621004304) do
+ActiveRecord::Schema.define(version: 20150625171411) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+  enable_extension "plpgsql"
 
-  create_table 'runs', force: :cascade do |t|
-    t.json     'algo_parameters',              null: false
-    t.datetime 'started_at'
-    t.datetime 'ended_at'
-    t.text     'output',          default: '', null: false
-    t.float 'score'
-    t.datetime 'created_at',                   null: false
-    t.datetime 'updated_at',                   null: false
+  create_table "runs", force: :cascade do |t|
+    t.json     "algo_parameters",              null: false
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.text     "output",          default: "", null: false
+    t.float    "score"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "host_name",       default: "", null: false
   end
 
 end

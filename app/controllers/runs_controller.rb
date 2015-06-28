@@ -1,9 +1,13 @@
 class RunsController < ApplicationController
-  before_action :set_run, only: [:show, :edit, :update, :destroy, :report_results]
+  before_action :set_run, only: [:show, :edit, :update, :destroy, :report_results, :restart]
   skip_before_action :verify_authenticity_token, only: [:report_results, :schedule_runs]
 
   def index
     @runs = RunsViewModel.new(params[:created_at])
+  end
+
+  def possible_pending
+    @possible_pending_runs_by_host_name = runs_service.possible_pending_runs_by_host_name
   end
 
   def show
@@ -41,7 +45,7 @@ class RunsController < ApplicationController
   end
 
   def start_random_pending_run
-    @run = runs_service.start_random_pending_run
+    @run = runs_service.start_random_pending_run params[:host_name]
     result = @run ? { result: :start, id: @run.id, algo_parameters: @run.algo_parameters } : { result: :nothing }
     render json: result
   end
@@ -59,6 +63,11 @@ class RunsController < ApplicationController
   def report_results
     runs_service.report_results(@run, run_params[:output])
     render nothing: true
+  end
+
+  def restart
+    runs_service.restart(@run)
+    redirect_to runs_path
   end
 
   private

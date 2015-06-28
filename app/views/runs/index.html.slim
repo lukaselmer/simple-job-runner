@@ -9,6 +9,7 @@ table.table.table-striped.table-hover
       th Score
       th Algo parameters
       th Ended at
+      th Host Name
       th
   tbody
     - @runs.best.each do |run|
@@ -16,6 +17,7 @@ table.table.table-striped.table-hover
         td = run.score
         td = run.algo_parameters.to_json
         td = "#{time_ago_in_words(run.ended_at)} ago"
+        td = run.host_name
         td = link_to 'Show', run
 
 
@@ -27,6 +29,8 @@ table.table.table-striped.table-hover
       th Ended at
       th Score
       th Algo parameters
+      th Host Name
+      th
       th
   tbody
     - @runs.ended.each do |run|
@@ -34,7 +38,9 @@ table.table.table-striped.table-hover
         td = "#{time_ago_in_words(run.ended_at)} ago"
         td = run.score
         td = run.algo_parameters.to_json
+        td = run.host_name
         td = link_to 'Show', run
+        td = link_to 'Restart', restart_run_path(run)
 
 
 h2 = "Pending (#{@runs.pending_total} total)"
@@ -58,9 +64,12 @@ table.table.table-striped.table-hover
     tr
       th Algo parameters
       th Started at
+      th Host Name
+      th
   tbody
     - @runs.started.each do |run|
       tr
         td = run.algo_parameters.to_json
         td = link_to("#{time_ago_in_words(run.started_at)} ago", runs_path(created_at: run.created_at))
-
+        td = link_to('Restart', restart_run_path(run))
+        td = run.host_name

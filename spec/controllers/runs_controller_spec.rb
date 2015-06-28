@@ -56,6 +56,15 @@ RSpec.describe RunsController, type: :controller do
     end
   end
 
+  describe 'GET #possible_pending' do
+    it 'should get the possible pending runs with a new hostname' do
+      runs_service_mock = mock_controller_with_run_service(controller)
+      expect(runs_service_mock).to receive(:possible_pending_runs_by_host_name).with(no_args).and_return([:x])
+      get :possible_pending, { host_name: 'any' }, valid_session
+      expect(assigns(:possible_pending_runs_by_host_name)).to eq([:x])
+    end
+  end
+
   describe 'GET #show' do
     it 'assigns the requested run as @run' do
       run = create(:ended_run)
@@ -85,8 +94,8 @@ RSpec.describe RunsController, type: :controller do
     it 'assigns a @run which it gets from the service' do
       run_mock = build_stubbed(:pending_run)
       runs_service_mock = mock_controller_with_run_service(controller)
-      expect(runs_service_mock).to receive(:start_random_pending_run).with(no_args).and_return(run_mock)
-      get :start_random_pending_run, valid_session
+      expect(runs_service_mock).to receive(:start_random_pending_run).with('host1').and_return(run_mock)
+      get :start_random_pending_run, { host_name: 'host1' }, valid_session
       expect(assigns(:run)).to eq(run_mock)
       id = run_mock.id.to_s
       json = run_mock.algo_parameters.to_json
@@ -95,8 +104,8 @@ RSpec.describe RunsController, type: :controller do
 
     it 'renders nothing when there are no pending runs' do
       runs_service_mock = mock_controller_with_run_service(controller)
-      expect(runs_service_mock).to receive(:start_random_pending_run).with(no_args).and_return(nil)
-      get :start_random_pending_run, valid_session
+      expect(runs_service_mock).to receive(:start_random_pending_run).with('host1').and_return(nil)
+      get :start_random_pending_run, { host_name: 'host1' }, valid_session
       expect(assigns(:run)).to eq(nil)
       expect(response.body).to eq('{"result":"nothing"}')
     end
@@ -169,6 +178,18 @@ RSpec.describe RunsController, type: :controller do
         post :create, { run: invalid_attributes }, valid_session
         expect(response).to render_template('new')
       end
+    end
+  end
+
+  describe 'GET #restart' do
+    render_views
+
+    it 'calls restart on the service' do
+      run = create(:started_run)
+      runs_service_mock = mock_controller_with_run_service(controller)
+      expect(runs_service_mock).to receive(:restart).with(run)
+      get :restart, { id: run.to_param }, valid_session
+      expect(response).to redirect_to(runs_url)
     end
   end
 

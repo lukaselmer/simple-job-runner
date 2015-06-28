@@ -1,0 +1,16 @@
+h1 Epoch vs Score
+
+- @charts.each do |algo_parameters, chart|
+  h2 = "Results for #{algo_parameters.to_a.map { |k, v| "#{k}=#{v}" }.sort.join(' ')}"
+  div.chart data-chart=chart.to_json
+
+  table.table.table-striped.table-hover
+    thead
+      tr
+        th Epoch
+        th Score
+    tbody
+      - chart.reverse.each do |x, score|
+        tr
+          td = x
+          td = score
