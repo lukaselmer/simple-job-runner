@@ -39,8 +39,9 @@ class RunsService
 
   def possible_pending_runs_by_host_name
     host_names = ['any'] + find_host_names
+    run_groups = find_run_groups
     host_names.map do |host_name|
-      [host_name, possible_pending_runs(host_name)]
+      [host_name, possible_pending_runs_with(host_name, run_groups)]
     end.to_h
   end
 
@@ -50,10 +51,16 @@ class RunsService
     Run.all.select('host_name').map(&:host_name).reject(&:blank?).uniq
   end
 
+  def select_fields(runs)
+    runs.select(:id, :score, :algo_parameters, :started_at, :ended_at, :host_name, :created_at)
+  end
+
   def possible_pending_runs(host_name)
-    pending_runs = Run.pending.to_a
-    started_runs = Run.started.to_a
-    ended_runs = Run.ended.to_a
+    possible_pending_runs_with(host_name, find_run_groups)
+  end
+
+  def possible_pending_runs_with(host_name, run_groups)
+    pending_runs, started_runs, ended_runs = run_groups
     pending_runs.select do |pending_run|
       started_runs.none? do |started_run|
         similar_algo_parameters?(pending_run, started_run)
@@ -61,6 +68,10 @@ class RunsService
         similar_algo_parameters?(pending_run, ended_run) && host_name != ended_run.host_name
       end
     end
+  end
+
+  def find_run_groups
+    [Run.pending, Run.started, Run.ended].map { |runs| select_fields(runs).to_a }
   end
 
   def similar_algo_parameters?(pending_run, started_run)
