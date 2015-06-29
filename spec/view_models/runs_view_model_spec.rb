@@ -35,27 +35,16 @@ RSpec.describe RunsViewModel, type: :view_model do
 
   describe 'best runs' do
     it 'should order the best runs by score' do
-      r1 = create(:ended_run, ended_at: 10.days.ago, score: 98, output: '')
-      r2 = create(:ended_run, ended_at: 15.days.ago, score: 99, output: '')
-      r3 = create(:ended_run, ended_at: 7.days.ago, score: 97, output: '')
-      create(:ended_run, ended_at: 7.days.ago, score: nil, output: 'error!')
+      r1 = create(:ended_run, ended_at: 10.days.ago, score: 98, log_output: nil)
+      r2 = create(:ended_run, ended_at: 15.days.ago, score: 99, log_output: nil)
+      r3 = create(:ended_run, ended_at: 7.days.ago, score: 97, log_output: nil)
+      create(:ended_run, ended_at: 7.days.ago, score: nil, log_output: build(:log_output_error))
       expect(RunsViewModel.new(nil).best).to eq([r2, r1, r3])
     end
 
     it 'should limit the best runs to 20' do
       21.times { create(:ended_run) }
       expect(RunsViewModel.new(nil).best.count).to eq(20)
-    end
-
-    it 'should not include the output for performance reasons' do
-      create(:ended_run, output: 'some')
-      create(:pending_run, output: 'some')
-      create(:started_run, output: 'some')
-      vm = RunsViewModel.new(nil)
-      expect { vm.pending.first.output }.to raise_error(ActiveModel::MissingAttributeError)
-      expect { vm.started.first.output }.to raise_error(ActiveModel::MissingAttributeError)
-      expect { vm.ended.first.output }.to raise_error(ActiveModel::MissingAttributeError)
-      expect { vm.best.first.output }.to raise_error(ActiveModel::MissingAttributeError)
     end
   end
 end

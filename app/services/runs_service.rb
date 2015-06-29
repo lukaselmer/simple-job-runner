@@ -18,7 +18,8 @@ class RunsService
   end
 
   def report_results(run, output)
-    run.output = output
+    run.log_output ||= LogOutput.new
+    run.log_output.output = output
     run.ended_at = Time.now
     run.save!
   end
@@ -51,10 +52,6 @@ class RunsService
     Run.all.select('host_name').map(&:host_name).reject(&:blank?).uniq
   end
 
-  def select_fields(runs)
-    runs.select(:id, :score, :algo_parameters, :started_at, :ended_at, :host_name, :created_at)
-  end
-
   def possible_pending_runs(host_name)
     possible_pending_runs_with(host_name, find_run_groups)
   end
@@ -71,7 +68,7 @@ class RunsService
   end
 
   def find_run_groups
-    [Run.pending, Run.started, Run.ended].map { |runs| select_fields(runs).to_a }
+    [Run.pending, Run.started, Run.ended].map(&:to_a)
   end
 
   def similar_algo_parameters?(pending_run, started_run)

@@ -39,6 +39,6 @@ class VisualizationService
   end
 
   def all_runs
-    Run.all.select(:id, :score, :algo_parameters).to_a
+    Run.all.to_a
   end
 end
