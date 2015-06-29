@@ -216,7 +216,6 @@ RSpec.describe RunsService, type: :service do
         run_service.schedule_runs(param1: [10], param2: [55], epochs: [30])
         expect(Run.first.algo_parameters).to eq('param1' => 10, 'param2' => 55, 'epochs' => 30)
         expect(Run.first.machine_algo_parameters).to eq('param1' => 10, 'param2' => 55)
-        # x.match(/^\d+\.\d*$/)
       end
     end
   end
