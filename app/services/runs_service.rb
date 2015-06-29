@@ -62,9 +62,9 @@ class RunsService
     pending_runs, started_runs, ended_runs = run_groups
     pending_runs.select do |pending_run|
       started_runs.none? do |started_run|
-        similar_algo_parameters?(pending_run, started_run)
+        need_to_run_on_same_machine?(pending_run, started_run)
       end && ended_runs.none? do |ended_run|
-        similar_algo_parameters?(pending_run, ended_run) && host_name != ended_run.host_name
+        need_to_run_on_same_machine?(pending_run, ended_run) && host_name != ended_run.host_name
       end
     end
   end
@@ -73,7 +73,7 @@ class RunsService
     [Run.pending, Run.started, Run.ended].map(&:to_a)
   end
 
-  def similar_algo_parameters?(pending_run, started_run)
+  def need_to_run_on_same_machine?(pending_run, started_run)
     pending_algo_parameters = pending_run.algo_parameters
     started_algo_parameters = started_run.algo_parameters.dup
     started_algo_parameters['epochs'] = pending_algo_parameters['epochs']
