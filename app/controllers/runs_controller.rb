@@ -56,7 +56,7 @@ class RunsController < ApplicationController
   end
 
   def schedule_runs
-    runs_service.schedule_runs(params[:algo_parameters].map { |k, v| [k.to_sym, v.map(&:to_i)] }.to_h)
+    runs_service.schedule_runs(params[:algo_parameters].map { |k, v| [k.to_sym, v.map { |vv| convert_json(vv) }] }.to_h)
     render nothing: true
   end
 
@@ -71,6 +71,12 @@ class RunsController < ApplicationController
   end
 
   private
+
+  def convert_json(value)
+    return value.to_i if value.match(/^\d+$/)
+    return value.to_f if value.match(/^(\d+\.\d*)|(\d*\.\d+)$/)
+    value
+  end
 
   def runs_service
     RunsService.new

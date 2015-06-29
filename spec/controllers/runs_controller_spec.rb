@@ -132,6 +132,22 @@ RSpec.describe RunsController, type: :controller do
       post :schedule_runs, { algo_parameters: algo_parameters }, valid_session
       expect(response.body).to eq('')
     end
+
+    it 'handles floats' do
+      runs_service_mock = mock_controller_with_run_service(controller)
+      algo_parameters = { param1: [10.5, 15], param2: [5] }
+      expect(runs_service_mock).to receive(:schedule_runs).with(algo_parameters)
+      post :schedule_runs, { algo_parameters: algo_parameters }, valid_session
+      expect(response.body).to eq('')
+    end
+
+    it 'handles strings' do
+      runs_service_mock = mock_controller_with_run_service(controller)
+      algo_parameters = { classifier: %w(rbf linear_svc), param2: [5] }
+      expect(runs_service_mock).to receive(:schedule_runs).with(algo_parameters)
+      post :schedule_runs, { algo_parameters: algo_parameters }, valid_session
+      expect(response.body).to eq('')
+    end
   end
 
   describe 'GET #report_results' do
