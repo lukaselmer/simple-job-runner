@@ -20,6 +20,8 @@ class RunsService
   def report_results(run, output)
     run.log_output ||= LogOutput.new
     run.log_output.output = output
+    run.log_output.save!
+
     run.ended_at = Time.now
     run.save!
   end

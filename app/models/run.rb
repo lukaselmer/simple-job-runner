@@ -3,7 +3,7 @@ class Run < ActiveRecord::Base
 
   validates :algo_parameters, presence: true
 
-  before_save :check_and_save_new_score, :cleanup_output
+  before_save :check_and_save_new_score
 
   scope :pending, -> { where(started_at: nil) }
   scope :started, -> { where.not(started_at: nil).where(ended_at: nil) }
@@ -18,20 +18,5 @@ class Run < ActiveRecord::Base
     return unless output
     score = log_output.extract_score
     self.score = score if score
-  end
-
-  def cleanup_output
-    return unless output
-
-    cleanup_output_with(/.*gensim.*INFO.*PROGRESS: at.*\n/)
-    cleanup_output_with(/.*gensim.*INFO.*storing numpy array.*\n/)
-    cleanup_output_with(/.*gensim.*INFO.*reached.*input.*outstanding jobs.*\n/)
-    log_output.save!
-  end
-
-  private
-
-  def cleanup_output_with(pattern)
-    log_output.output = output.gsub(pattern, '')
   end
 end
