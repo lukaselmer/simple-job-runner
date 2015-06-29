@@ -140,7 +140,7 @@ RSpec.describe RunsService, type: :service do
     end
   end
 
-  describe 'report results of started run' do
+  describe '#report_results' do
     it 'should finish a started run' do
       create(:started_run)
       started_run_2 = create(:started_run, algo_parameters: { xxx: 123 })

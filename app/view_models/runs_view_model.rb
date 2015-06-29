@@ -4,10 +4,10 @@ class RunsViewModel
   def initialize(raw_created_at)
     runs = load_runs(raw_created_at)
 
-    @pending = select_fields(find_pending(runs))
-    @started = select_fields(find_started(runs))
-    @ended = select_fields(find_ended(runs))
-    @best = select_fields(find_best(runs))
+    @pending = find_pending(runs)
+    @started = find_started(runs)
+    @ended = find_ended(runs)
+    @best = find_best(runs)
 
     init_totals(runs)
   end
@@ -28,10 +28,6 @@ class RunsViewModel
 
   def find_pending(runs)
     runs.pending.limit(20)
-  end
-
-  def select_fields(runs)
-    runs.select(:id, :score, :algo_parameters, :started_at, :ended_at, :host_name, :created_at)
   end
 
   def init_totals(runs)

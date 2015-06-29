@@ -12,7 +12,7 @@ RSpec.describe RunsController, type: :controller do
   end
 
   let(:invalid_attributes) do
-    { algo_parameters: nil, score: 10, output: "Blablabla\nScore: 10%\nBlabla" }
+    { algo_parameters: nil, score: 10 }
   end
 
   # This should return the minimal set of values that should be in the session
@@ -196,7 +196,7 @@ RSpec.describe RunsController, type: :controller do
   describe 'PUT #update' do
     context 'with valid params' do
       let(:new_attributes) do
-        { algo_parameters: { a: 50, b: 22 }.to_json, output: "Blablabla\nScore: 33.5%\nBlabla" }
+        { algo_parameters: { a: 50, b: 22 }.to_json }
       end
 
       it 'updates the requested run' do
@@ -204,8 +204,6 @@ RSpec.describe RunsController, type: :controller do
         put :update, { id: run.to_param, run: new_attributes }, valid_session
         run.reload
         expect(run.algo_parameters).to eq('a' => 50, 'b' => 22)
-        expect(run.score).to eq(33.5)
-        expect(run.output).to eq("Blablabla\nScore: 33.5%\nBlabla")
       end
 
       it 'assigns the requested run as @run' do
