@@ -27,7 +27,12 @@ class RunsService
   end
 
   def schedule_runs(parameters)
-    all = [nil].product(*parameters.values).map(&:compact).map { |v| { algo_parameters: parameters.keys.zip(v).to_h } }
+    all = [nil].product(*parameters.values).map(&:compact).map do |v|
+      algo_parameters = parameters.keys.zip(v).to_h
+      machine_algo_parameters = delete_machine_dependent_parameters(algo_parameters)
+
+      { algo_parameters: algo_parameters, machine_algo_parameters: machine_algo_parameters }
+    end
     Run.create!(all)
   end
 
@@ -49,6 +54,12 @@ class RunsService
   end
 
   private
+
+  def delete_machine_dependent_parameters(algo_parameters)
+    machine_algo_parameters = algo_parameters.dup
+    machine_algo_parameters.delete(:epochs)
+    machine_algo_parameters
+  end
 
   def find_host_names
     Run.all.select('host_name').map(&:host_name).reject(&:blank?).uniq

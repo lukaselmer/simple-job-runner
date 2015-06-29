@@ -204,6 +204,21 @@ RSpec.describe RunsService, type: :service do
       expect(find_run_by_params(runs, 7, nil, nil)).not_to be_nil
       expect(find_run_by_params(runs, 10, nil, nil)).not_to be_nil
     end
+
+    describe 'machine algo parameters' do
+      it 'should set the machine algo parameters' do
+        run_service.schedule_runs(param1: [10], param2: [55])
+        expect(Run.first.algo_parameters).to eq('param1' => 10, 'param2' => 55)
+        expect(Run.first.machine_algo_parameters).to eq('param1' => 10, 'param2' => 55)
+      end
+
+      it 'should remove the machine dependent parameters' do
+        run_service.schedule_runs(param1: [10], param2: [55], epochs: [30])
+        expect(Run.first.algo_parameters).to eq('param1' => 10, 'param2' => 55, 'epochs' => 30)
+        expect(Run.first.machine_algo_parameters).to eq('param1' => 10, 'param2' => 55)
+        # x.match(/^\d+\.\d*$/)
+      end
+    end
   end
 
   describe 'end all the runs' do
