@@ -45,8 +45,6 @@ class RunsController < ApplicationController
   def convert_json(value)
     return value.map { |k, v| [k.to_sym, convert_json(v)] }.to_h if value.is_a?(Hash)
     return value.map { |v| convert_json(v) } if value.is_a?(Array)
-    return value.to_i if value.match(/^\d+$/)
-    return value.to_f if value.match(/^(\d+\.\d*)|(\d*\.\d+)$/)
     value
   end
 

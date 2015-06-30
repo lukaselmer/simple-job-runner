@@ -2,10 +2,10 @@ require 'rails_helper'
 
 def find_run_by_params(runs, param1, param2, param3)
   runs.find do |run|
-    algo_parameters = run.narrow_params.merge(run.general_params)
-    algo_parameters['param1'] == param1 &&
-      algo_parameters['param2'] == param2 &&
-      algo_parameters['param3'] == param3
+    algo_params = run.narrow_params.merge(run.general_params)
+    algo_params['param1'] == param1 &&
+      algo_params['param2'] == param2 &&
+      algo_params['param3'] == param3
   end
 end
 

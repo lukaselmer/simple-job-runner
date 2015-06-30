@@ -111,7 +111,7 @@ RSpec.describe RunsController, type: :controller do
       general_params = { param1: [10, 15], param2: [5] }
       narrow_params = { epochs: [40, 50] }
       expect(runs_service_mock).to receive(:schedule_runs).with(general_params, narrow_params)
-      post :schedule_runs, { general_params: general_params, narrow_params: narrow_params }, valid_session
+      post :schedule_runs, { format: :json, general_params: general_params, narrow_params: narrow_params }, valid_session
       expect(response.body).to eq('')
     end
 
@@ -120,7 +120,7 @@ RSpec.describe RunsController, type: :controller do
       general_params = { param1: [10.5, 15], param2: [5] }
       narrow_params = { epochs: [40, 50] }
       expect(runs_service_mock).to receive(:schedule_runs).with(general_params, narrow_params)
-      post :schedule_runs, { general_params: general_params, narrow_params: narrow_params }, valid_session
+      post :schedule_runs, { format: :json, general_params: general_params, narrow_params: narrow_params }, valid_session
       expect(response.body).to eq('')
     end
 
@@ -129,7 +129,7 @@ RSpec.describe RunsController, type: :controller do
       general_params = { classifier: %w(rbf linear_svc), param2: [5] }
       narrow_params = { epochs: [40, 50] }
       expect(runs_service_mock).to receive(:schedule_runs).with(general_params, narrow_params)
-      post :schedule_runs, { general_params: general_params, narrow_params: narrow_params }, valid_session
+      post :schedule_runs, { format: :json, general_params: general_params, narrow_params: narrow_params }, valid_session
       expect(response.body).to eq('')
     end
   end
