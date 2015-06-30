@@ -1,7 +1,7 @@
 class Run < ActiveRecord::Base
   has_one :log_output
 
-  validates :algo_parameters, presence: true
+  validates :narrow_params, :general_params, presence: true
 
   before_save :check_and_save_new_score
 
@@ -18,5 +18,9 @@ class Run < ActiveRecord::Base
     return unless output
     score = log_output.extract_score
     self.score = score if score
+  end
+
+  def algo_params
+    general_params.merge(narrow_params)
   end
 end

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 def find_run_by_params(runs, param1, param2, param3)
   runs.find do |run|
-    algo_parameters = run.algo_parameters
+    algo_parameters = run.narrow_params.merge(run.general_params)
     algo_parameters['param1'] == param1 &&
       algo_parameters['param2'] == param2 &&
       algo_parameters['param3'] == param3
@@ -22,15 +22,15 @@ RSpec.describe RunsService, type: :service do
     'myhost2.com'
   end
 
-  let(:algo_parameters_with_10_epochs) do
+  let(:narrow_params_with_10_epochs) do
     { epochs: 10, x: 10, y: 20 }
   end
 
-  let(:algo_parameters_with_20_epochs) do
+  let(:narrow_params_with_20_epochs) do
     { epochs: 20, x: 10, y: 20 }
   end
 
-  let(:different_algo_parameters) do
+  let(:different_narrow_params) do
     { epochs: 20, a: 33, b: 44 }
   end
 
@@ -46,12 +46,12 @@ RSpec.describe RunsService, type: :service do
 
     it 'should get a random pending run' do
       # there must be a better way for this...?
-      create(:pending_run, algo_parameters: { epochs: 5, a: 10 })
-      create(:pending_run, algo_parameters: { epochs: 5, a: 20 })
-      pending_run_3 = create(:pending_run, algo_parameters: { epochs: 5, a: 30 })
-      pending_run_4 = create(:pending_run, algo_parameters: { epochs: 5, a: 40 })
-      create(:pending_run, algo_parameters: { epochs: 5, a: 50 })
-      pending_run_6 = create(:pending_run, algo_parameters: { epochs: 5, a: 60 })
+      create(:pending_run, narrow_params: { epochs: 5, a: 10 }, general_params: { b: 10 })
+      create(:pending_run, narrow_params: { epochs: 5, a: 20 }, general_params: { b: 20 })
+      pending_run_3 = create(:pending_run, narrow_params: { epochs: 5, a: 30 }, general_params: { b: 30 })
+      pending_run_4 = create(:pending_run, narrow_params: { epochs: 5, a: 40 }, general_params: { b: 40 })
+      create(:pending_run, narrow_params: { epochs: 5, a: 50 }, general_params: { b: 50 })
+      pending_run_6 = create(:pending_run, narrow_params: { epochs: 5, a: 60 }, general_params: { b: 60 })
       Kernel.srand(42)
       expect(run_service.start_random_pending_run(host_name_1)).to eq(pending_run_4)
       expect(run_service.start_random_pending_run(host_name_1)).to eq(pending_run_6)
@@ -59,8 +59,8 @@ RSpec.describe RunsService, type: :service do
     end
 
     it 'should set the run to started' do
-      create(:pending_run, algo_parameters: { epochs: 5, a: 10 })
-      create(:pending_run, algo_parameters: { epochs: 5, a: 20 })
+      create(:pending_run, narrow_params: { epochs: 5, a: 10 }, general_params: { b: 10 })
+      create(:pending_run, narrow_params: { epochs: 5, a: 20 }, general_params: { b: 20 })
       started_run_1 = run_service.start_random_pending_run(host_name_1)
       expect(started_run_1.started_at).not_to be_nil
       started_run_2 = run_service.start_random_pending_run(host_name_1)
@@ -70,7 +70,7 @@ RSpec.describe RunsService, type: :service do
     end
 
     it 'should set the host name when a run is started' do
-      run = create(:pending_run, algo_parameters: algo_parameters_with_20_epochs)
+      run = create(:pending_run)
       started_run = run_service.start_random_pending_run(host_name_2)
       expect(started_run.host_name).to eq(host_name_2)
       run.reload
@@ -94,10 +94,10 @@ RSpec.describe RunsService, type: :service do
     end
 
     it 'should get a hash with every host and the possible runs' do
-      create(:pending_run, algo_parameters: { a: 30 })
-      create(:started_run, algo_parameters: { a: 10 }, host_name: 'x')
-      create(:started_run, algo_parameters: { a: 12 }, host_name: 'x')
-      create(:started_run, algo_parameters: { a: 20 }, host_name: 'z')
+      create(:pending_run)
+      create(:started_run, host_name: 'x')
+      create(:started_run, host_name: 'x')
+      create(:started_run, host_name: 'z')
       allow(run_service).to receive(:find_run_groups).and_return(:xxx)
       expect(run_service).to receive(:possible_pending_runs_with).with(/any|x|z/, :xxx).and_return([:a], [:b], [:c])
       result = run_service.possible_pending_runs_by_host_name
@@ -116,20 +116,20 @@ RSpec.describe RunsService, type: :service do
     end
 
     it 'should not get the run with different epochs and same parameters to a different host' do
-      create(:ended_run, algo_parameters: algo_parameters_with_10_epochs, host_name: host_name_1)
-      create(:pending_run, algo_parameters: algo_parameters_with_20_epochs)
+      create(:ended_run, narrow_params: { epochs: 10 }, general_params: { a: 10 }, host_name: host_name_1)
+      create(:pending_run, narrow_params: { epochs: 20 }, general_params: { a: 10 })
       expect(run_service.send(:possible_pending_runs, host_name_2)).to be_empty
     end
 
     it 'should get the run with different epochs and same parameters to the same host' do
-      create(:ended_run, algo_parameters: algo_parameters_with_10_epochs, host_name: host_name_1)
-      run = create(:pending_run, algo_parameters: algo_parameters_with_20_epochs)
+      create(:ended_run, narrow_params: { epochs: 10 }, general_params: { a: 10 }, host_name: host_name_1)
+      run = create(:pending_run, narrow_params: { epochs: 20 }, general_params: { a: 10 })
       expect(run_service.send(:possible_pending_runs, host_name_1)).to eq([run])
     end
 
     it 'should not get the run with different epochs and same parameters while one is running' do
-      create(:pending_run, algo_parameters: algo_parameters_with_10_epochs)
-      create(:started_run, algo_parameters: algo_parameters_with_20_epochs)
+      create(:pending_run, narrow_params: { epochs: 10 }, general_params: { a: 10 })
+      create(:started_run, narrow_params: { epochs: 20 }, general_params: { a: 10 })
       expect(run_service.send(:possible_pending_runs, host_name_1)).to be_empty
     end
 
@@ -143,7 +143,7 @@ RSpec.describe RunsService, type: :service do
   describe '#report_results' do
     it 'should finish a started run' do
       create(:started_run)
-      started_run_2 = create(:started_run, algo_parameters: { xxx: 123 })
+      started_run_2 = create(:started_run)
       expect(started_run_2.ended_at).to be_nil
       run_service.report_results started_run_2, "Bla\nScore: 85.32%\nXxxx"
       started_run_2.reload
@@ -156,7 +156,7 @@ RSpec.describe RunsService, type: :service do
   describe 'schedule new runs' do
     it 'should schedule new runs (3*3*2)' do
       expect(Run.count).to eq(0)
-      run_service.schedule_runs(param1: [5, 7, 9], param2: [1, 5], param3: [10, 20, 30])
+      run_service.schedule_runs({ param1: [5, 7, 9] }, param2: [1, 5], param3: [10, 20, 30])
       expect(Run.count).to eq(3 * 3 * 2)
 
       runs = Run.all.to_a
@@ -168,7 +168,7 @@ RSpec.describe RunsService, type: :service do
 
     it 'should schedule new runs (1*1*1)' do
       expect(Run.count).to eq(0)
-      run_service.schedule_runs(param1: [5], param2: [1], param3: [15])
+      run_service.schedule_runs({ param1: [5], param2: [1] }, param3: [15])
       expect(Run.count).to eq(1)
 
       runs = Run.all.to_a
@@ -177,7 +177,7 @@ RSpec.describe RunsService, type: :service do
 
     it 'should schedule new runs (1*2*1)' do
       expect(Run.count).to eq(0)
-      run_service.schedule_runs(param1: [5], param2: [1, 2], param3: [15])
+      run_service.schedule_runs({ param1: [5], param2: [1, 2] }, param3: [15])
       expect(Run.count).to eq(2)
 
       runs = Run.all.to_a
@@ -187,7 +187,7 @@ RSpec.describe RunsService, type: :service do
 
     it 'should schedule new runs (1*2)' do
       expect(Run.count).to eq(0)
-      run_service.schedule_runs(param1: [5], param2: [1, 2])
+      run_service.schedule_runs({ param1: [5] }, param2: [1, 2])
       expect(Run.count).to eq(2)
 
       runs = Run.all.to_a
@@ -197,12 +197,28 @@ RSpec.describe RunsService, type: :service do
 
     it 'should schedule new runs (2)' do
       expect(Run.count).to eq(0)
-      run_service.schedule_runs(param1: [7, 10])
+      run_service.schedule_runs({ param1: [7, 10] }, epochs: [10])
       expect(Run.count).to eq(2)
 
       runs = Run.all.to_a
       expect(find_run_by_params(runs, 7, nil, nil)).not_to be_nil
       expect(find_run_by_params(runs, 10, nil, nil)).not_to be_nil
+    end
+
+    describe 'machine algo parameters' do
+      it 'should set the machine algo parameters' do
+        run_service.schedule_runs({ param1: [10] }, param2: [55])
+        expect(Run.first.algo_params).to eq('param1' => 10, 'param2' => 55)
+        expect(Run.first.general_params).to eq('param1' => 10)
+        expect(Run.first.narrow_params).to eq('param2' => 55)
+      end
+
+      it 'should remove the machine dependent parameters' do
+        run_service.schedule_runs({ param1: [10] }, param2: [55], epochs: [30])
+        expect(Run.first.algo_params).to eq('param1' => 10, 'param2' => 55, 'epochs' => 30)
+        expect(Run.first.general_params).to eq('param1' => 10)
+        expect(Run.first.narrow_params).to eq('param2' => 55, 'epochs' => 30)
+      end
     end
   end
 

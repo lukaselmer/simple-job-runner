@@ -12,5 +12,5 @@ h1 Possible Pending Runs
     tbody
     - pending_runs.each do |run|
       tr
-        td = run.algo_parameters.map { |k, v| "#{k}=#{v}" }.sort.join(' ')
+        td = run.algo_params.map { |k, v| "#{k}=#{v}" }.sort.join(' ')
         td = link_to 'Show', run

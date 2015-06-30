@@ -26,9 +26,17 @@ class RunsService
     run.save!
   end
 
-  def schedule_runs(parameters)
-    all = [nil].product(*parameters.values).map(&:compact).map { |v| { algo_parameters: parameters.keys.zip(v).to_h } }
+  def schedule_runs(general_params, narrow_params)
+    merged_params = general_params.merge(narrow_params)
+    all = [nil].product(*merged_params.values).map(&:compact).map do |v|
+      all_params = merged_params.keys.zip(v).to_h
+      { general_params: select_keys(all_params, general_params), narrow_params: select_keys(all_params, narrow_params) }
+    end
     Run.create!(all)
+  end
+
+  def select_keys(algo_parameters, general_params)
+    algo_parameters.select { |k, _| general_params.keys.include?(k) }
   end
 
   def end_all
@@ -73,10 +81,7 @@ class RunsService
     [Run.pending, Run.started, Run.ended].map(&:to_a)
   end
 
-  def need_to_run_on_same_machine?(pending_run, started_run)
-    pending_algo_parameters = pending_run.algo_parameters
-    started_algo_parameters = started_run.algo_parameters.dup
-    started_algo_parameters['epochs'] = pending_algo_parameters['epochs']
-    started_algo_parameters == pending_algo_parameters
+  def need_to_run_on_same_machine?(pending_run, started_or_ended_run)
+    pending_run.general_params == started_or_ended_run.general_params
   end
 end
