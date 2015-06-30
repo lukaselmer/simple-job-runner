@@ -14,39 +14,9 @@ class RunsController < ApplicationController
     render format: :json
   end
 
-  def new
-    @run = Run.new
-  end
-
-  def edit
-  end
-
-  def create
-    @run = Run.new(run_params)
-
-    if @run.save
-      redirect_to @run, notice: 'Run was successfully created.'
-    else
-      render :new
-    end
-  end
-
-  def update
-    if @run.update(run_params)
-      redirect_to @run, notice: 'Run was successfully updated.'
-    else
-      render :edit
-    end
-  end
-
-  def destroy
-    @run.destroy
-    redirect_to runs_url, notice: 'Run was successfully destroyed.'
-  end
-
   def start_random_pending_run
     @run = runs_service.start_random_pending_run params[:host_name]
-    result = @run ? { result: :start, id: @run.id, algo_parameters: @run.algo_parameters } : { result: :nothing }
+    result = @run ? { result: :start, id: @run.id, algo_params: @run.algo_params } : { result: :nothing }
     render json: result
   end
 
@@ -56,12 +26,12 @@ class RunsController < ApplicationController
   end
 
   def schedule_runs
-    runs_service.schedule_runs(params[:algo_parameters].map { |k, v| [k.to_sym, v.map(&:to_i)] }.to_h)
+    runs_service.schedule_runs(convert_json(params[:general_params]), convert_json(params[:narrow_params]))
     render nothing: true
   end
 
   def report_results
-    runs_service.report_results(@run, run_params[:output])
+    runs_service.report_results(@run, params[:run][:output])
     render nothing: true
   end
 
@@ -72,15 +42,17 @@ class RunsController < ApplicationController
 
   private
 
+  def convert_json(value)
+    return value.map { |k, v| [k.to_sym, convert_json(v)] }.to_h if value.is_a?(Hash)
+    return value.map { |v| convert_json(v) } if value.is_a?(Array)
+    value
+  end
+
   def runs_service
     RunsService.new
   end
 
   def set_run
     @run = Run.find(params[:id])
-  end
-
-  def run_params
-    params.require(:run).permit(:algo_parameters, :started_at, :ended_at, :output, :score)
   end
 end

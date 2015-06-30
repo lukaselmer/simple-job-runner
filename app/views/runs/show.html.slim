@@ -1,8 +1,14 @@
 p#notice = notice
 
 p
-  strong Algo parameters:
-  = @run.algo_parameters.to_json
+  strong General params:
+  = @run.general_params.to_json
+p
+  strong Narrow params:
+  = @run.narrow_params.to_json
+p
+  strong Algo params:
+  = @run.algo_params.to_json
 p
   strong Started at:
   = @run.started_at
@@ -16,6 +22,4 @@ p
   strong Score:
   = @run.score
 
-= link_to 'Edit', edit_run_path(@run)
-'|
 = link_to 'Back', runs_path

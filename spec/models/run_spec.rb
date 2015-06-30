@@ -5,9 +5,15 @@ RSpec.describe Run, type: :model do
     build(:ended_run)
   end
 
-  it 'should check the validations' do
+  it 'should check the narrow params validations' do
     expect(ended_run.valid?).to be_truthy
-    ended_run.algo_parameters = nil
+    ended_run.narrow_params = nil
+    expect(ended_run.valid?).to be_falsey
+  end
+
+  it 'should check the general params validations' do
+    expect(ended_run.valid?).to be_truthy
+    ended_run.general_params = nil
     expect(ended_run.valid?).to be_falsey
   end
 
@@ -36,5 +42,10 @@ RSpec.describe Run, type: :model do
     expect(Run.pending.count).to eq(4)
     expect(Run.started.count).to eq(3)
     expect(Run.ended.count).to eq(2)
+  end
+
+  it 'returns the algo params' do
+    run = build(:started_run, general_params: { a: 44 }, narrow_params: { c: 55, d: 'test' })
+    expect(run.algo_params).to eq('a' => 44, 'c' => 55, 'd' => 'test')
   end
 end

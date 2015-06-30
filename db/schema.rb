@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150629061310) do
+ActiveRecord::Schema.define(version: 20150629192454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,13 +24,14 @@ ActiveRecord::Schema.define(version: 20150629061310) do
   end
 
   create_table "runs", force: :cascade do |t|
-    t.json     "algo_parameters",              null: false
     t.datetime "started_at"
     t.datetime "ended_at"
     t.float    "score"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.string   "host_name",       default: "", null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "host_name",      default: "", null: false
+    t.jsonb    "narrow_params"
+    t.jsonb    "general_params"
   end
 
   add_index "runs", ["created_at"], name: "index_runs_on_created_at", using: :btree
