@@ -20,7 +20,7 @@ RSpec.describe 'runs/index', type: :view do
   it 'renders the pending runs' do
     render
 
-    expect(rendered).to include(ERB::Util.html_escape(@pending_run_1.algo_params.to_json))
+    expect(rendered).to include(ERB::Util.html_escape(@pending_run_1.algo_params.to_json.gsub(',', ', ')))
     expect(rendered).to include('10 days ago')
     expect(rendered).to include('Pending (777 total)')
   end
@@ -28,7 +28,7 @@ RSpec.describe 'runs/index', type: :view do
   it 'renders the started runs' do
     render
 
-    expect(rendered).to include(ERB::Util.html_escape(@started_run_1.algo_params.to_json))
+    expect(rendered).to include(ERB::Util.html_escape(@started_run_1.algo_params.to_json.gsub(',', ', ')))
     expect(rendered).to include('17 days ago')
     expect(rendered).to include('Restart')
     expect(rendered).to include('started_host')
@@ -37,7 +37,7 @@ RSpec.describe 'runs/index', type: :view do
   it 'renders the ended runs' do
     render
 
-    expect(rendered).to include(ERB::Util.html_escape(@ended_run_1.algo_params.to_json))
+    expect(rendered).to include(ERB::Util.html_escape(@ended_run_1.algo_params.to_json.gsub(',', ', ')))
     expect(rendered).not_to include(@ended_run_1.output)
     expect(rendered).to include('99.0')
     expect(rendered).to include('34.5')
@@ -52,7 +52,7 @@ RSpec.describe 'runs/index', type: :view do
   it 'renders the best runs' do
     render
 
-    expect(rendered).to include(ERB::Util.html_escape(@best_ended_run.algo_params.to_json))
+    expect(rendered).to include(ERB::Util.html_escape(@best_ended_run.algo_params.to_json.gsub(',', ', ')))
     expect(rendered).to include('99.99')
     expect(rendered).to include('26 days ago')
     expect(rendered).to include('best_host')
