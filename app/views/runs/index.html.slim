@@ -15,7 +15,7 @@ table.table.table-striped.table-hover
     - @runs.best.each do |run|
       tr
         td = run.score
-        td = run.algo_params.to_json
+        td = run.algo_params.to_json.gsub(',', ', ')
         td = "#{time_ago_in_words(run.ended_at)} ago"
         td = run.host_name
         td = link_to 'Show', run
@@ -37,7 +37,7 @@ table.table.table-striped.table-hover
       tr
         td = "#{time_ago_in_words(run.ended_at)} ago"
         td = run.score
-        td = run.algo_params.to_json
+        td = run.algo_params.to_json.gsub(',', ', ')
         td = run.host_name
         td = link_to 'Show', run
         td = link_to 'Restart', restart_run_path(run)
@@ -53,7 +53,7 @@ table.table.table-striped.table-hover
   tbody
     - @runs.pending.each do |run|
       tr
-        td = run.algo_params.to_json
+        td = run.algo_params.to_json.gsub(',', ', ')
         td = link_to("#{time_ago_in_words(run.created_at)} ago", runs_path(created_at: run.created_at))
 
 
@@ -69,7 +69,7 @@ table.table.table-striped.table-hover
   tbody
     - @runs.started.each do |run|
       tr
-        td = run.algo_params.to_json
+        td = run.algo_params.to_json.gsub(',', ', ')
         td = link_to("#{time_ago_in_words(run.started_at)} ago", runs_path(created_at: run.created_at))
         td = link_to('Restart', restart_run_path(run))
         td = run.host_name
