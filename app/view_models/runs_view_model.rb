@@ -1,8 +1,8 @@
 class RunsViewModel
   attr_reader :pending, :started, :ended, :best, :pending_total, :ended_total
 
-  def initialize(raw_created_at)
-    runs = load_runs(raw_created_at)
+  def initialize(raw_created_at, min_created_at)
+    runs = load_runs(raw_created_at, min_created_at)
 
     @pending = find_pending(runs)
     @started = find_started(runs)
@@ -35,8 +35,9 @@ class RunsViewModel
     @ended_total = runs.ended.count
   end
 
-  def load_runs(raw_created_at)
+  def load_runs(raw_created_at, min_created_at)
     runs = Run.all
+    runs = runs.min_created_at(min_created_at) if min_created_at
     return runs unless raw_created_at
 
     created_at = raw_created_at.to_datetime
