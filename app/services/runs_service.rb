@@ -35,8 +35,8 @@ class RunsService
     Run.create!(all)
   end
 
-  def select_keys(algo_parameters, general_params)
-    algo_parameters.select { |k, _| general_params.keys.include?(k) }
+  def select_keys(algo_params, general_params)
+    algo_params.select { |k, _| general_params.keys.include?(k) }
   end
 
   def end_all

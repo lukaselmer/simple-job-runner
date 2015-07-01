@@ -22,3 +22,11 @@ p
       label for='api_key' API Key
       input.form-control id='api_key' placeholder='API Key' name='api_key' value=session[:api_key]
     button.btn.btn-default type='submit' Authenticate
+
+p
+  h3 Date filter
+  form
+    .form-group
+      label for='date_filter' Only show runs from this date on
+      input.form-control id='date_filter' placeholder='2015-06-30' name='date_filter' value=session[:date_filter]
+    button.btn.btn-default type='submit' Set Date

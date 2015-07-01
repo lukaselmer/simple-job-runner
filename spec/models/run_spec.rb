@@ -48,4 +48,12 @@ RSpec.describe Run, type: :model do
     run = build(:started_run, general_params: { a: 44 }, narrow_params: { c: 55, d: 'test' })
     expect(run.algo_params).to eq('a' => 44, 'c' => 55, 'd' => 'test')
   end
+
+  it 'filters by min created at' do
+    create(:started_run)
+    expect(Run.min_created_at(10.days.ago).count).to eq(1)
+    expect(Run.min_created_at(2.minutes.ago).count).to eq(1)
+    expect(Run.min_created_at(2.minutes.since).count).to eq(0)
+    expect(Run.min_created_at(10.days.since).count).to eq(0)
+  end
 end

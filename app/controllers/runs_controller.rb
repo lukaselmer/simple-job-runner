@@ -3,7 +3,7 @@ class RunsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:report_results, :schedule_runs]
 
   def index
-    @runs = RunsViewModel.new(params[:created_at])
+    @runs = RunsViewModel.new(params[:created_at], @date_filter)
   end
 
   def possible_pending

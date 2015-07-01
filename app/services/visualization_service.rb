@@ -1,8 +1,9 @@
 require 'ostruct'
 
 class VisualizationService
-  def initialize(minimum_points_per_chart = 3)
+  def initialize(minimum_points_per_chart, date_filter = nil)
     @minimum_points_per_chart = minimum_points_per_chart
+    @date_filter = date_filter
   end
 
   def charts(x)
@@ -31,14 +32,16 @@ class VisualizationService
   end
 
   def structured_runs(x)
-    all_runs.select { |run| run.algo_parameters.key?(x) && run.score }.map do |run|
-      params_without_x = run.algo_parameters.dup
+    all_runs.select { |run| run.algo_params.key?(x) && run.score }.map do |run|
+      params_without_x = run.algo_params.dup
       x_value = params_without_x.delete(x)
       OpenStruct.new(params_without_x: params_without_x, x_value: x_value, score: run.score)
     end
   end
 
   def all_runs
-    Run.all.to_a
+    runs = Run.all
+    runs = runs.min_created_at(@date_filter) if @date_filter
+    runs.to_a
   end
 end
