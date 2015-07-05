@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   get 'visualizations/x_vs_score/:x', to: 'visualizations#x_vs_score', as: :x_vs_score
 
-  resources :runs, only: [:show, :index] do
+  resources :run_groups, only: %i(index show)
+
+  resources :runs, only: %i(index show) do
     collection do
       get 'possible_pending'
       get 'start_random_pending_run'
