@@ -1,4 +1,6 @@
 class VisualizationsController < ApplicationController
+  before_filter :init_filterable_attributes
+
   def x_vs_score
     @charts = visualization_service.charts(params[:x])
   end
@@ -11,7 +13,15 @@ class VisualizationsController < ApplicationController
 
   private
 
+  def init_filterable_attributes
+    @filterable_attributes = run_filter_service.filterable_attributes
+  end
+
   def visualization_service
     VisualizationService.new(2, @date_filter)
+  end
+
+  def run_filter_service
+    RunFilterService.new
   end
 end

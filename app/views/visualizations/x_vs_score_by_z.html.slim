@@ -1,5 +1,7 @@
 h1 #{@x_name} vs Score Grouped by #{@z_name}
 
+= render 'filter'
+
 - @charts.each do |algo_params, multi_chart|
   div.chart[data-series=convert_multi_chart_data(multi_chart, @z_name)
     data-chart-title="#{algo_params.to_a.map { |k, v| "#{k}=#{v}" }.sort.join(' ')}"

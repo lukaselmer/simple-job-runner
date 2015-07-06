@@ -1,5 +1,7 @@
 h1 Epoch vs Score
 
+= render 'filter'
+
 - @charts.each do |algo_params, chart|
   div.chart[data-series=convert_chart_data(chart)
     data-chart-title="#{algo_params.to_a.map { |k, v| "#{k}=#{v}" }.sort.join(' ')}"]
