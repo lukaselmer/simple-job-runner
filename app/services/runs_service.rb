@@ -14,8 +14,7 @@ class RunsService
     run.log_output.output = output
     run.log_output.save!
 
-    run.run_group.running = false
-    run.run_group.save!
+    stop_run_group(run.run_group)
 
     run.ended_at = Time.now
     run.save!
@@ -55,6 +54,11 @@ class RunsService
 
   private
 
+  def stop_run_group(run_group)
+    run_group.running = false
+    run_group.save!
+  end
+
   def create_runs(all_runs, run_groups)
     runs_attributes = all_runs.map do |run|
       run[:run_group_id] = run_groups[run[:general_params].to_json].id
@@ -66,12 +70,12 @@ class RunsService
 
   def start_run_group(run_group, host_name)
     run_group.transaction do
+      run_to_start = run_group.runs.pending.to_a.sample
+      return nil unless run_to_start
+
       run_group.running = true
       run_group.host_name = host_name
       run_group.save!
-
-      run_to_start = run_group.runs.pending.to_a.sample
-      return nil unless run_to_start
 
       start_run(host_name, run_to_start)
     end
