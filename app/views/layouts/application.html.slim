@@ -22,6 +22,7 @@ html
             - if @authentication_valid
               li= link_to 'Epochs vs Scores', x_vs_score_path(x: :epochs)
               li= link_to 'Pending by Host', possible_pending_runs_path
+              li= link_to 'Run Groups', run_groups_path
               li= link_to 'Runs', runs_path
               li= link_to 'Logout', '/?api_key='
             - else

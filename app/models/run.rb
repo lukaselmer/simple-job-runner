@@ -1,10 +1,12 @@
 class Run < ActiveRecord::Base
   has_one :log_output
 
+  belongs_to :run_group
+
   validates :narrow_params, :general_params, presence: true
 
   before_save :check_and_save_new_score
-  
+
   default_scope { where(created_at: Date.parse('2015-06-29')..Time.now) } unless Rails.env.test?
 
   scope :pending, -> { where(started_at: nil) }
