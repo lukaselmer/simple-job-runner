@@ -1,6 +1,8 @@
 class Run < ActiveRecord::Base
   has_one :log_output
 
+  belongs_to :run_group
+
   validates :narrow_params, :general_params, presence: true
 
   before_save :check_and_save_new_score

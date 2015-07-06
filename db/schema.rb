@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150705232304) do
+ActiveRecord::Schema.define(version: 20150706010338) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 20150705232304) do
     t.string   "host_name",      default: "", null: false
     t.jsonb    "narrow_params"
     t.jsonb    "general_params"
+    t.integer  "run_group_id"
   end
 
   add_index "runs", ["created_at"], name: "index_runs_on_created_at", using: :btree
