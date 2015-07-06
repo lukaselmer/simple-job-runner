@@ -1,20 +1,12 @@
 class RunsService
   def start_random_pending_run(host_name)
-    Run.transaction do
-      # avoid concurrency problems
-      run_to_start = possible_pending_runs(host_name).sample
+    assigned_ready_run_group = RunGroup.where(running: false, finished: false, host_name: host_name)
+    return start_run_group(assigned_ready_run_group.sample, host_name) if assigned_ready_run_group.any?
 
-      return unless run_to_start
+    unassigned_ready_run_group = RunGroup.where(running: false, finished: false, host_name: '')
+    return start_run_group(unassigned_ready_run_group.sample, host_name) if unassigned_ready_run_group.any?
 
-      run_to_start.reload
-      return nil if run_to_start.started_at
-
-      run_to_start.host_name = host_name
-      run_to_start.started_at = Time.now
-      run_to_start.save!
-
-      run_to_start
-    end
+    nil
   end
 
   def report_results(run, output)
@@ -22,26 +14,26 @@ class RunsService
     run.log_output.output = output
     run.log_output.save!
 
+    run.run_group.running = false
+    run.run_group.save!
+
     run.ended_at = Time.now
     run.save!
   end
 
   def schedule_runs(general_params, narrow_params)
-    merged_params = general_params.merge(narrow_params)
-    all = [nil].product(*merged_params.values).map(&:compact).map do |v|
-      all_params = merged_params.keys.zip(v).to_h
-      { general_params: select_keys(all_params, general_params), narrow_params: select_keys(all_params, narrow_params) }
-    end
-    Run.create!(all)
-  end
+    all_runs = build_run_combinations(general_params, narrow_params)
 
-  def select_keys(algo_params, general_params)
-    algo_params.select { |k, _| general_params.keys.include?(k) }
+    fail RangeError, 'too many runs' if all_runs.length >= 800
+
+    run_groups = create_run_groups(all_runs)
+    create_runs(all_runs, run_groups)
   end
 
   def end_all
     Run.pending.update_all(started_at: Time.now, ended_at: Time.now)
     Run.started.update_all(ended_at: Time.now)
+    RunGroup.running.update_all(running: false)
   end
 
   def restart(run)
@@ -49,39 +41,71 @@ class RunsService
   end
 
   def possible_pending_runs_by_host_name
-    host_names = ['any'] + find_host_names
-    run_groups = find_run_groups
-    host_names.map do |host_name|
-      [host_name, possible_pending_runs_with(host_name, run_groups)]
-    end.to_h
+    pending_runs_by_host_name = {}
+
+    RunGroup.where(running: false, finished: false).includes(:runs).each do |run_group|
+      host_name = run_group.host_name.blank? ? 'any' : run_group.host_name
+
+      pending_runs_by_host_name[host_name] ||= []
+      pending_runs_by_host_name[host_name] += run_group.runs.to_a.select { |run| !run.started_at }
+    end
+
+    pending_runs_by_host_name
   end
 
   private
 
-  def find_host_names
-    Run.all.select('host_name').map(&:host_name).reject(&:blank?).uniq
+  def create_runs(all_runs, run_groups)
+    runs_attributes = all_runs.map do |run|
+      run[:run_group_id] = run_groups[run[:general_params].to_json].id
+      run
+    end
+
+    Run.create! runs_attributes
   end
 
-  def possible_pending_runs(host_name)
-    possible_pending_runs_with(host_name, find_run_groups)
-  end
+  def start_run_group(run_group, host_name)
+    run_group.transaction do
+      run_group.running = true
+      run_group.host_name = host_name
+      run_group.save!
 
-  def possible_pending_runs_with(host_name, run_groups)
-    pending_runs, started_runs, ended_runs = run_groups
-    pending_runs.select do |pending_run|
-      started_runs.none? do |started_run|
-        need_to_run_on_same_machine?(pending_run, started_run)
-      end && ended_runs.none? do |ended_run|
-        need_to_run_on_same_machine?(pending_run, ended_run) && host_name != ended_run.host_name
-      end
+      run_to_start = run_group.runs.pending.to_a.sample
+      return nil unless run_to_start
+
+      start_run(host_name, run_to_start)
     end
   end
 
-  def find_run_groups
-    [Run.pending, Run.started, Run.ended].map(&:to_a)
+  def start_run(host_name, run_to_start)
+    run_to_start.transaction do
+      run_to_start.reload
+      return nil if run_to_start.started_at
+
+      run_to_start.host_name = host_name
+      run_to_start.started_at = Time.now
+      run_to_start.save!
+      run_to_start
+    end
   end
 
-  def need_to_run_on_same_machine?(pending_run, started_or_ended_run)
-    pending_run.general_params == started_or_ended_run.general_params
+  def build_run_combinations(general_params, narrow_params)
+    merged_params = general_params.merge(narrow_params)
+    [nil].product(*merged_params.values).map(&:compact).map do |v|
+      all_params = merged_params.keys.zip(v).to_h
+      { general_params: select_keys(all_params, general_params), narrow_params: select_keys(all_params, narrow_params) }
+    end
+  end
+
+  def create_run_groups(all_runs)
+    run_groups = all_runs.map { |run_attr| run_attr[:general_params].to_json }.uniq
+
+    # This will result in n queries. Is there a better way to do this?
+    run_groups.map { |params| [params, RunGroup.find_or_create_by(general_params: params)] }.to_h
+  end
+
+  def select_keys(algo_params, general_params)
+    unsorted = algo_params.select { |k, _| general_params.keys.include?(k) }
+    unsorted.sort_by { |k, _| k.to_s }.to_h
   end
 end

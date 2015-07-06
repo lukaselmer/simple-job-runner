@@ -1,0 +1,19 @@
+h1 Run Groups
+
+table.table.table-striped.table-hover
+  thead
+    tr
+      th General params
+      th Host name
+      th Running
+      th Finished
+      th
+
+  tbody
+    - @run_groups.each do |run_group|
+      tr
+        td = run_group.general_params
+        td = run_group.host_name
+        td = run_group.running
+        td = run_group.finished
+        td = link_to 'Show', run_group
