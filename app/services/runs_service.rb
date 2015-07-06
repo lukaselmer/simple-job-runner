@@ -27,16 +27,12 @@ class RunsService
   end
 
   def schedule_runs(general_params, narrow_params)
-    merged_params = general_params.merge(narrow_params)
-    all = [nil].product(*merged_params.values).map(&:compact).map do |v|
-      all_params = merged_params.keys.zip(v).to_h
-      { general_params: select_keys(all_params, general_params), narrow_params: select_keys(all_params, narrow_params) }
-    end
-    Run.create!(all)
-  end
+    all_runs = build_run_combinations(general_params, narrow_params)
 
-  def select_keys(algo_params, general_params)
-    algo_params.select { |k, _| general_params.keys.include?(k) }
+    fail RangeError, 'too many runs' if all_runs.length >= 800
+
+    create_run_groups(all_runs)
+    Run.create!(all_runs)
   end
 
   def end_all
@@ -57,6 +53,27 @@ class RunsService
   end
 
   private
+
+  def build_run_combinations(general_params, narrow_params)
+    merged_params = general_params.merge(narrow_params)
+    [nil].product(*merged_params.values).map(&:compact).map do |v|
+      all_params = merged_params.keys.zip(v).to_h
+      { general_params: select_keys(all_params, general_params), narrow_params: select_keys(all_params, narrow_params) }
+    end
+  end
+
+  def create_run_groups(all_runs)
+    run_groups = all_runs.map { |run_attr| run_attr[:general_params].to_json }.uniq
+
+    # This will result in n queries. Is there a better way to do this?
+    new_run_groups = run_groups.reject { |params| RunGroup.exists?(general_params: params) }
+
+    RunGroup.create!(new_run_groups.map { |params| { general_params: params } })
+  end
+
+  def select_keys(algo_params, general_params)
+    algo_params.select { |k, _| general_params.keys.include?(k) }
+  end
 
   def find_host_names
     Run.all.select('host_name').map(&:host_name).reject(&:blank?).uniq

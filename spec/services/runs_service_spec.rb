@@ -9,6 +9,14 @@ def find_run_by_params(runs, param1, param2, param3)
   end
 end
 
+def find_run_group_by_params(run_groups, param1, param2, param3)
+  run_groups.find do |run|
+    run.general_params['param1'] == param1 &&
+      run.general_params['param2'] == param2 &&
+      run.general_params['param3'] == param3
+  end
+end
+
 RSpec.describe RunsService, type: :service do
   let(:run_service) do
     RunsService.new
@@ -154,6 +162,51 @@ RSpec.describe RunsService, type: :service do
   end
 
   describe 'schedule new runs' do
+    it 'should abort if there are more than 800 runs to be scheduled' do
+      a = %w(0 1 2 3 4 5 6 7 8 9)
+      z = %w(0 1 2 3 4 5 6 7)
+      expect { run_service.schedule_runs({ a: a, b: a }, z: z) }.to raise_error(RangeError)
+
+      expect(Run.count).to eq(0)
+    end
+
+    it 'should create new run groups (3) when scheduling new runs' do
+      expect(Run.count).to eq(0)
+      run_service.schedule_runs({ param1: [5, 7, 9] }, param2: [1, 5], param3: [10, 20, 30])
+      expect(RunGroup.count).to eq(3)
+
+      run_groups = RunGroup.all.to_a
+      expect(find_run_group_by_params(run_groups, 5, nil, nil)).not_to be_nil
+      expect(find_run_group_by_params(run_groups, 7, nil, nil)).not_to be_nil
+      expect(find_run_group_by_params(run_groups, 9, nil, nil)).not_to be_nil
+    end
+
+    it 'should create new run groups (3*2) when scheduling new runs' do
+      expect(Run.count).to eq(0)
+      run_service.schedule_runs({ param1: [5, 7, 9], param2: [1, 5] }, param3: [10, 20, 30])
+      expect(RunGroup.count).to eq(3 * 2)
+
+      run_groups = RunGroup.all.to_a
+      expect(find_run_group_by_params(run_groups, 5, 1, nil)).not_to be_nil
+      expect(find_run_group_by_params(run_groups, 5, 5, nil)).not_to be_nil
+      expect(find_run_group_by_params(run_groups, 7, 1, nil)).not_to be_nil
+      expect(find_run_group_by_params(run_groups, 7, 5, nil)).not_to be_nil
+      expect(find_run_group_by_params(run_groups, 9, 1, nil)).not_to be_nil
+      expect(find_run_group_by_params(run_groups, 9, 5, nil)).not_to be_nil
+    end
+
+    it 'should not create duplicated run groups when scheduling new runs' do
+      expect(Run.count).to eq(0)
+      RunGroup.create!(general_params: { param1: 5 })
+      run_service.schedule_runs({ param1: [5, 7, 9] }, param2: [1, 5], param3: [10, 20, 30])
+      expect(RunGroup.count).to eq(3)
+
+      run_groups = RunGroup.all.to_a
+      expect(find_run_group_by_params(run_groups, 5, nil, nil)).not_to be_nil
+      expect(find_run_group_by_params(run_groups, 7, nil, nil)).not_to be_nil
+      expect(find_run_group_by_params(run_groups, 9, nil, nil)).not_to be_nil
+    end
+
     it 'should schedule new runs (3*3*2)' do
       expect(Run.count).to eq(0)
       run_service.schedule_runs({ param1: [5, 7, 9] }, param2: [1, 5], param3: [10, 20, 30])
