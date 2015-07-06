@@ -7,7 +7,7 @@ class Run < ActiveRecord::Base
 
   before_save :check_and_save_new_score
 
-  default_scope { where(created_at: Date.parse('2015-06-29')..Time.now) } unless Rails.env.test?
+  default_scope { where(id: 6972..100_000_000) } unless Rails.env.test?
 
   scope :pending, -> { where(started_at: nil) }
   scope :started, -> { where.not(started_at: nil).where(ended_at: nil) }
