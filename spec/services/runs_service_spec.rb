@@ -121,6 +121,14 @@ RSpec.describe RunsService, type: :service do
       expect(run_service.possible_pending_runs_by_host_name).to eq('any' => [pending_run])
     end
 
+    it 'should get an array with one run if one pending run exists' do
+      run_group1 = create(:run_group, general_params: { a: 10 }, host_name: '')
+      pending_run1 = create(:pending_run, general_params: { a: 10 }, run_group: run_group1)
+      run_group2 = create(:run_group, general_params: { b: 10 }, host_name: '')
+      pending_run2 = create(:pending_run, general_params: { b: 10 }, run_group: run_group2)
+      expect(run_service.possible_pending_runs_by_host_name).to eq('any' => [pending_run1, pending_run2])
+    end
+
     it 'should not get the run with different epochs and same parameters to a different host' do
       create(:ended_run, narrow_params: { epochs: 10 }, general_params: { a: 10 }, host_name: host_name_1)
       create(:pending_run, narrow_params: { epochs: 20 }, general_params: { a: 10 })
@@ -184,6 +192,7 @@ RSpec.describe RunsService, type: :service do
       expect(find_run_group_by_params(run_groups, 5, nil, nil)).not_to be_nil
       expect(find_run_group_by_params(run_groups, 7, nil, nil)).not_to be_nil
       expect(find_run_group_by_params(run_groups, 9, nil, nil)).not_to be_nil
+      expect(run_groups.first.runs.count).to eq(2 * 3)
     end
 
     it 'should create new run groups (3*2) when scheduling new runs' do
@@ -198,6 +207,7 @@ RSpec.describe RunsService, type: :service do
       expect(find_run_group_by_params(run_groups, 7, 5, nil)).not_to be_nil
       expect(find_run_group_by_params(run_groups, 9, 1, nil)).not_to be_nil
       expect(find_run_group_by_params(run_groups, 9, 5, nil)).not_to be_nil
+      expect(run_groups.first.runs.count).to eq(3)
     end
 
     it 'should not create duplicated run groups when scheduling new runs' do

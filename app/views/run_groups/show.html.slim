@@ -13,4 +13,19 @@ p
   strong Finished:
   = @run_group.finished
 
+
+table.table.table-striped.table-hover
+  thead
+    tr
+      th Algo Params
+      th Host Name
+      th
+  tbody
+    - @run_group.runs.each do |run|
+      tr
+        td = run.algo_params.to_json.gsub(',', ', ')
+        td = run.host_name
+        td = link_to 'Show', run
+
+
 = link_to 'Back', run_groups_path

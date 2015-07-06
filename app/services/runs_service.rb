@@ -26,8 +26,8 @@ class RunsService
 
     fail RangeError, 'too many runs' if all_runs.length >= 800
 
-    create_run_groups(all_runs)
-    Run.create!(all_runs)
+    run_groups = create_run_groups(all_runs)
+    create_runs(all_runs, run_groups)
   end
 
   def end_all
@@ -41,14 +41,28 @@ class RunsService
   end
 
   def possible_pending_runs_by_host_name
-    RunGroup.where(running: false, finished: false).includes(:runs).map do |run_group|
+    pending_runs_by_host_name = {}
+
+    RunGroup.where(running: false, finished: false).includes(:runs).each do |run_group|
       host_name = run_group.host_name.blank? ? 'any' : run_group.host_name
 
-      [host_name, run_group.runs.to_a.select { |run| !run.started_at }]
-    end.to_h
+      pending_runs_by_host_name[host_name] ||= []
+      pending_runs_by_host_name[host_name] += run_group.runs.to_a.select { |run| !run.started_at }
+    end
+
+    pending_runs_by_host_name
   end
 
   private
+
+  def create_runs(all_runs, run_groups)
+    runs_attributes = all_runs.map do |run|
+      run[:run_group_id] = run_groups[run[:general_params].to_json].id
+      run
+    end
+
+    Run.create! runs_attributes
+  end
 
   def start_run_group(run_group, host_name)
     run_group.transaction do
@@ -87,12 +101,11 @@ class RunsService
     run_groups = all_runs.map { |run_attr| run_attr[:general_params].to_json }.uniq
 
     # This will result in n queries. Is there a better way to do this?
-    new_run_groups = run_groups.reject { |params| RunGroup.exists?(general_params: params) }
-
-    RunGroup.create!(new_run_groups.map { |params| { general_params: params } })
+    run_groups.map { |params| [params, RunGroup.find_or_create_by(general_params: params)] }.to_h
   end
 
   def select_keys(algo_params, general_params)
-    algo_params.select { |k, _| general_params.keys.include?(k) }
+    unsorted = algo_params.select { |k, _| general_params.keys.include?(k) }
+    unsorted.sort_by { |k, _| k.to_s }.to_h
   end
 end
