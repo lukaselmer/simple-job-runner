@@ -79,6 +79,16 @@ RSpec.describe RunsService, type: :service do
       expect(run_service.start_random_pending_run(host_name_1)).to be_nil
     end
 
+    it 'should start the next run' do
+      create(:ended_run, run_group: create(:run_group, general_params: { b: 10 }, host_name: host_name_1),
+                         narrow_params: { epochs: 5 }, general_params: { b: 10 })
+      create(:pending_run, run_group: create(:run_group, general_params: { b: 20 }, host_name: ''),
+                           narrow_params: { epochs: 5 }, general_params: { b: 20 })
+      started_run_1 = run_service.start_random_pending_run(host_name_1)
+      expect(started_run_1.started_at).not_to be_nil
+      expect(run_service.start_random_pending_run(host_name_1)).to be_nil
+    end
+
     it 'should set the run group to running' do
       create(:pending_run, run_group: create(:run_group, general_params: { b: 10 }),
                            narrow_params: { epochs: 5, a: 10 }, general_params: { b: 10 })
