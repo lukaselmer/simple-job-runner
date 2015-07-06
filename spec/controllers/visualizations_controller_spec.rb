@@ -18,4 +18,14 @@ RSpec.describe VisualizationsController, type: :controller do
       expect(assigns(:charts)).to eq(:magic)
     end
   end
+
+  describe 'GET #x_vs_score_by_z' do
+    it 'returns http success' do
+      mocked_service = mock_controller_with_visualization_service(controller)
+      expect(mocked_service).to receive(:multi_charts).with('epochs', 'zzz').and_return(:magic)
+      get :x_vs_score_by_z, { x: :epochs, z: :zzz }, valid_session
+      expect(response).to have_http_status(:success)
+      expect(assigns(:charts)).to eq(:magic)
+    end
+  end
 end
