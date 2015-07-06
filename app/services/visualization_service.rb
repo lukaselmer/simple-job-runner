@@ -6,6 +6,17 @@ class VisualizationService
     @date_filter = date_filter
   end
 
+  def multi_charts(x1, x2)
+    charts_with_x2 = charts(x1).select { |params, _| params.key?(x2) }
+    grouped_charts = charts_with_x2.group_by { |params, _| params.reject { |k, _| k == x2 } }
+    grouped_charts.map do |new_params, series|
+      multi_series = series.map do |params, data|
+        [params[x2], data]
+      end.to_h
+      [new_params, multi_series]
+    end
+  end
+
   def charts(x)
     structured_runs = structured_runs(x)
     grouped_runs = grouped_runs(structured_runs)

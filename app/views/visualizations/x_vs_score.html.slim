@@ -1,8 +1,8 @@
 h1 Epoch vs Score
 
 - @charts.each do |algo_params, chart|
-  h2 = "Results for #{algo_params.to_a.map { |k, v| "#{k}=#{v}" }.sort.join(' ')}"
-  div.chart data-chart=chart.to_json
+  div.chart[data-series=convert_chart_data(chart)
+    data-chart-title="#{algo_params.to_a.map { |k, v| "#{k}=#{v}" }.sort.join(' ')}"]
 
   table.table.table-striped.table-hover
     thead

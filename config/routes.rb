@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'visualizations/x_vs_score/:x', to: 'visualizations#x_vs_score', as: :x_vs_score
+  get 'visualizations/x_vs_score/:x/:z', to: 'visualizations#x_vs_score_by_z', as: :x_vs_score_by_z
 
   resources :run_groups, only: %i(index show)
 
