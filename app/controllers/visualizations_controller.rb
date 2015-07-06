@@ -6,6 +6,6 @@ class VisualizationsController < ApplicationController
   private
 
   def visualization_service
-    VisualizationService.new(3, @date_filter)
+    VisualizationService.new(2, @date_filter)
   end
 end

@@ -1,7 +1,10 @@
 class RunsService
   def start_random_pending_run(host_name)
     assigned_ready_run_group = RunGroup.where(running: false, finished: false, host_name: host_name)
-    return start_run_group(assigned_ready_run_group.sample, host_name) if assigned_ready_run_group.any?
+    if assigned_ready_run_group.any?
+      run = start_run_group(assigned_ready_run_group.sample, host_name)
+      return run if run
+    end
 
     unassigned_ready_run_group = RunGroup.where(running: false, finished: false, host_name: '')
     return start_run_group(unassigned_ready_run_group.sample, host_name) if unassigned_ready_run_group.any?
