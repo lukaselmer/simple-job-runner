@@ -5,10 +5,7 @@ class RunsService
 
   def start_random_pending_run(host_name)
     assigned_ready_run_group = @run_groups_service.pending_run_groups(host_name)
-    if assigned_ready_run_group.any?
-      run = start_run_group(assigned_ready_run_group.sample, host_name)
-      return run if run
-    end
+    return start_run_group(assigned_ready_run_group.sample, host_name) if assigned_ready_run_group.any?
 
     unassigned_ready_run_group = @run_groups_service.pending_run_groups('')
     return start_run_group(unassigned_ready_run_group.sample, host_name) if unassigned_ready_run_group.any?
@@ -78,7 +75,7 @@ class RunsService
   def start_run_group(run_group, host_name)
     run_group.transaction do
       run_to_start = run_group.runs.pending.to_a.sample
-      return nil unless run_to_start
+      fail 'unexpected state' unless run_to_start
 
       run_group.running = true
       run_group.host_name = host_name
@@ -91,7 +88,7 @@ class RunsService
   def start_run(host_name, run_to_start)
     run_to_start.transaction do
       run_to_start.reload
-      return nil if run_to_start.started_at
+      fail 'unexpected state' if run_to_start.started_at
 
       run_to_start.host_name = host_name
       run_to_start.started_at = Time.now
