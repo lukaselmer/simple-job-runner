@@ -11,6 +11,16 @@ end
 RSpec.describe VisualizationsController, type: :controller do
   let(:valid_session) { { api_key: ENV['API_KEY'] } }
 
+  describe 'services' do
+    it 'should return a visualization service' do
+      expect(controller.send(:visualization_service)).to be_a(VisualizationService)
+    end
+
+    it 'should return a run filter service' do
+      expect(controller.send(:run_filter_service)).to be_a(RunFilterService)
+    end
+  end
+
   describe 'GET #x_vs_score' do
     it 'returns http success' do
       visualization_service, run_filter_service = mock_controller_with_visualization_service(controller)
