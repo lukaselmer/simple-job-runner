@@ -1,12 +1,16 @@
 class RunsService
+  def initialize(run_groups_service = RunGroupsService.new)
+    @run_groups_service = run_groups_service
+  end
+
   def start_random_pending_run(host_name)
-    assigned_ready_run_group = RunGroup.where(running: false, finished: false, host_name: host_name)
+    assigned_ready_run_group = @run_groups_service.pending_run_groups(host_name)
     if assigned_ready_run_group.any?
       run = start_run_group(assigned_ready_run_group.sample, host_name)
       return run if run
     end
 
-    unassigned_ready_run_group = RunGroup.where(running: false, finished: false, host_name: '')
+    unassigned_ready_run_group = @run_groups_service.pending_run_groups('')
     return start_run_group(unassigned_ready_run_group.sample, host_name) if unassigned_ready_run_group.any?
 
     nil
