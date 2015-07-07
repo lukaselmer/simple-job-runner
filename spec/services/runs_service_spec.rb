@@ -47,6 +47,12 @@ RSpec.describe RunsService, type: :service do
       expect(run_service.start_random_pending_run(host_name_1)).to be_nil
     end
 
+    it 'should not start a run group without pending runs' do
+      create(:run_group, host_name: host_name_1)
+      expect(run_service).not_to receive(:start_run_group)
+      run_service.start_random_pending_run(host_name_1)
+    end
+
     it 'should get the first run if one pending run exists' do
       pending_run = create(:pending_run)
       expect(run_service.start_random_pending_run(host_name_1)).to eq(pending_run)
