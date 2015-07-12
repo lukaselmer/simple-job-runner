@@ -7,16 +7,20 @@ h1 #{@x_name} vs Score Grouped by #{@z_name}
     data-chart-title="#{algo_params.to_a.map { |k, v| "#{k}=#{v}" }.sort.join(' ')}"
     data-chart-x-name=@x_name]
 
-  table.table.table-striped.table-hover
-    thead
-      tr
-        th HPV
-        th Epoch
-        th Score
-    tbody
-      - multi_chart.sort_by { |k, _| k }.each do |x, chart|
-        - chart.each do |z, score|
-          tr
-            td = x
-            td = z
-            td = score
+  a.btn.btn-xs.btn-default.btn-block.toggle-table
+    | Toggle Data
+
+  .collapse
+    table.table.table-striped.table-hover
+      thead
+        tr
+          th=@x_name
+          th=@z_name
+          th Score
+      tbody
+        - multi_chart.sort_by { |k, _| k }.each do |x, chart|
+          - chart.each do |z, score|
+            tr
+              td = x
+              td = z
+              td = score

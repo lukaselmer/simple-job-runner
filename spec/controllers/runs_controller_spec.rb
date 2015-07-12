@@ -16,6 +16,12 @@ RSpec.describe RunsController, type: :controller do
   # RunsController. Be sure to keep this updated too.
   let(:valid_session) { { api_key: ENV['API_KEY'] } }
 
+  describe '#runs_service' do
+    it 'should return a run service' do
+      expect(controller.send(:runs_service)).to be_a(RunsService)
+    end
+  end
+
   describe 'GET #index' do
     it 'assigns all runs as @runs' do
       pending_run = create(:pending_run)
