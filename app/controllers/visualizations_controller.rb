@@ -3,15 +3,20 @@ class VisualizationsController < ApplicationController
 
   def x_vs_score
     @charts = visualization_service.charts(params[:x])
+    init_names
   end
 
   def x_vs_score_by_z
     @charts = visualization_service.multi_charts(params[:x], params[:z])
-    @x_name = params[:x].humanize
-    @z_name = params[:z].humanize
+    init_names
   end
 
   private
+
+  def init_names
+    @x_name = params[:x].humanize
+    @z_name = params[:z].humanize if params[:z]
+  end
 
   def init_filterable_attributes
     @filterable_attributes = run_filter_service.filterable_attributes
