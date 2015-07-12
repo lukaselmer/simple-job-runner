@@ -4,12 +4,13 @@ h1 Epoch vs Score
 
 - @charts.each do |algo_params, chart|
   div.chart[data-series=convert_chart_data(chart)
-    data-chart-title="#{algo_params.to_a.map { |k, v| "#{k}=#{v}" }.sort.join(' ')}"]
+    data-chart-title="#{algo_params.to_a.map { |k, v| "#{k}=#{v}" }.sort.join(' ')}"
+    data-chart-x-name=@x_name]
 
   table.table.table-striped.table-hover
     thead
       tr
-        th Epoch
+        th=@x_name
         th Score
     tbody
       - chart.reverse.each do |x, score|

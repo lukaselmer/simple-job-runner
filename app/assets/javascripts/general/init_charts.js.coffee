@@ -5,6 +5,8 @@ $ ->
     x_name = $(chart).data('chart-x-name')
 
     $(chart).highcharts
+      chart:
+        height: 500
       line:
         dataLabels:
           enabled: true

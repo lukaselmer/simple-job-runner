@@ -30,6 +30,7 @@ RSpec.describe VisualizationsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(assigns(:charts)).to eq(:magic)
       expect(assigns(:filterable_attributes)).to eq(:magic2)
+      expect(assigns(:x_name)).to eq('Epochs')
     end
   end
 
@@ -42,6 +43,8 @@ RSpec.describe VisualizationsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(assigns(:charts)).to eq(:magic)
       expect(assigns(:filterable_attributes)).to eq(:magic2)
+      expect(assigns(:x_name)).to eq('Epochs')
+      expect(assigns(:z_name)).to eq('Zzz')
     end
   end
 end
