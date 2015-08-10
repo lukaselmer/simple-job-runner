@@ -41,6 +41,7 @@ class RunsService
 
   def restart(run)
     run.update!(started_at: nil, ended_at: nil)
+    run.run_group.update!(running: false)
   end
 
   def possible_pending_runs_by_host_name

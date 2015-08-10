@@ -38,10 +38,11 @@ RSpec.describe Run, type: :model do
     create(:started_run)
     create(:started_run)
     create(:ended_run)
-    create(:ended_run)
+    create(:failed_ended_run)
     expect(Run.pending.count).to eq(4)
     expect(Run.started.count).to eq(3)
     expect(Run.ended.count).to eq(2)
+    expect(Run.failed.count).to eq(1)
   end
 
   it 'returns the algo params' do

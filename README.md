@@ -63,6 +63,19 @@ rspec
 rails s webrick
 ```
 
+## Remarks
+
+If something goes wrong with all the running tasks:
+
+```
+Run.started.each{|r| r.run_group.update(running: false); r.update(started_at: nil)}
+rr=Run.includes(:run_group).where(created_at: 10.days.ago...Time.now).map(&:run_group).uniq.map{|x|x.update(host_name: '')}
+Run.find(16179).run_group.update(host_name: 'Lukass-MacBook-Pro-2.local')
+Run.find(16179).run_group.runs.map{|x| x.ended_at? ? x.score.nil? : false}
+# restart failed runs from one run group
+rr=Run.includes(:run_group).where(created_at: 10.days.ago...Time.now).to_a.select{|x| x.ended_at && x.score.nil?}.first.run_group.runs.to_a.reject(&:score).map{|x| x.update(started_at: nil, ended_at: nil)}
+```
+
 ## Copyright
 
 Coypright 2015 [Lukas Elmer](https://github.com/lukaselmer).

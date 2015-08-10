@@ -24,5 +24,10 @@ FactoryGirl.define do
     host_name 'myhost1.com'
     ended_at Time.now
     association :run_group, general_params: { a: 20, b: 63 }.to_json
+
+    factory :failed_ended_run do
+      score nil
+      association :log_output, factory: :log_output_error
+    end
   end
 end

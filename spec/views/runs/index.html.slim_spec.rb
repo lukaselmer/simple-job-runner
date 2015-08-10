@@ -13,6 +13,7 @@ RSpec.describe 'runs/index', type: :view do
     allow(runs_view_model_mock).to receive(:started).and_return([@started_run_1])
     allow(runs_view_model_mock).to receive(:ended).and_return([@ended_run_1, @ended_run_2])
     allow(runs_view_model_mock).to receive(:ended_total).and_return(999)
+    allow(runs_view_model_mock).to receive(:ended_failed).and_return(23)
     allow(runs_view_model_mock).to receive(:best).and_return([@best_ended_run])
     assign(:runs, runs_view_model_mock)
   end
@@ -43,7 +44,7 @@ RSpec.describe 'runs/index', type: :view do
     expect(rendered).to include('34.5')
     expect(rendered).to include('25 days ago')
     expect(rendered).to include('23 days ago')
-    expect(rendered).to include('Ended (999 total)')
+    expect(rendered).to include('Ended (999 total, 23 failed)')
     expect(rendered).to include('Restart')
     expect(rendered).to include('ended_host1')
     expect(rendered).to include('ended_host2')

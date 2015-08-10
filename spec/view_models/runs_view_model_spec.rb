@@ -27,9 +27,11 @@ RSpec.describe RunsViewModel, type: :view_model do
     end
 
     it 'should limit the pending runs to 20' do
-      21.times { create(:ended_run) }
+      15.times { create(:ended_run) }
+      6.times { create(:failed_ended_run) }
       expect(RunsViewModel.new(nil, nil).ended.count).to eq(20)
       expect(RunsViewModel.new(nil, nil).ended_total).to eq(21)
+      expect(RunsViewModel.new(nil, nil).ended_failed).to eq(6)
     end
   end
 
