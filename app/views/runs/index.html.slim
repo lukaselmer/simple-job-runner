@@ -21,7 +21,7 @@ table.table.table-striped.table-hover
         td = link_to 'Show', run
 
 
-h2 = "Ended (#{@runs.ended_total} total)"
+h2 = "Ended (#{@runs.ended_total} total, #{@runs.ended_failed} failed)"
 
 table.table.table-striped.table-hover
   thead

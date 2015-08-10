@@ -1,5 +1,5 @@
 class RunsViewModel
-  attr_reader :pending, :started, :ended, :best, :pending_total, :ended_total
+  attr_reader :pending, :started, :ended, :best, :pending_total, :ended_total, :ended_failed
 
   def initialize(raw_created_at, min_created_at)
     runs = load_runs(raw_created_at, min_created_at)
@@ -33,6 +33,7 @@ class RunsViewModel
   def init_totals(runs)
     @pending_total = runs.pending.count
     @ended_total = runs.ended.count
+    @ended_failed = runs.failed.count
   end
 
   def load_runs(raw_created_at, min_created_at)
