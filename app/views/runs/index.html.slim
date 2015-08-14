@@ -3,6 +3,14 @@ h1 Runs
 
 h2 Best
 
+.panel.panel-default
+  .panel-heading
+    h3.panel-title Summary
+  .panel-body
+    div = "Pending: #{@runs.pending_total}"
+    div = "Ended: #{@runs.ended_total}"
+    div = "Failed: #{@runs.ended_failed}"
+
 table.table.table-striped.table-hover
   thead
     tr
