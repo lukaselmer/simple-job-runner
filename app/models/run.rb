@@ -1,18 +1,12 @@
 class Run < ActiveRecord::Base
   has_one :log_output
-
   belongs_to :run_group
 
   validates :narrow_params, :general_params, presence: true
 
   before_save :check_and_save_new_score
 
-  scope :pending, -> { where(started_at: nil) }
-  scope :started, -> { where.not(started_at: nil).where(ended_at: nil) }
-  scope :ended, -> { where.not(started_at: nil, ended_at: nil) }
-  scope :failed, -> { ended.where(score: nil) }
-  scope :best, -> { ended.where.not(score: nil) }
-  scope :min_created_at, ->(min_created_at) { where(created_at: min_created_at..Time.now) }
+  include RunScopes
 
   def output
     log_output.try(:output)
