@@ -35,6 +35,20 @@ RSpec.describe RunsViewModel, type: :view_model do
     end
   end
 
+  describe 'failed runs' do
+    it 'should limit the failed runs to 20' do
+      21.times { create(:failed_ended_run) }
+      expect(RunsViewModel.new(nil, nil).failed.count).to eq(20)
+    end
+
+    it 'should order the failed runs by ended at' do
+      r1 = create(:failed_ended_run, ended_at: 10.days.ago)
+      r2 = create(:failed_ended_run, ended_at: 15.days.ago)
+      r3 = create(:failed_ended_run, ended_at: 7.days.ago)
+      expect(RunsViewModel.new(nil, nil).failed).to eq([r3, r1, r2])
+    end
+  end
+
   describe 'best runs' do
     it 'should order the best runs by score' do
       r1 = create(:ended_run, ended_at: 10.days.ago, score: 98, log_output: nil)

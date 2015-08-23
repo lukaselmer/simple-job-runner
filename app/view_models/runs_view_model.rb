@@ -1,5 +1,5 @@
 class RunsViewModel
-  attr_reader :pending, :started, :ended, :best, :pending_total, :ended_total, :ended_failed
+  attr_reader :pending, :started, :ended, :failed, :best, :pending_total, :ended_total, :ended_failed
 
   def initialize(raw_created_at, min_created_at)
     runs = load_runs(raw_created_at, min_created_at)
@@ -7,6 +7,7 @@ class RunsViewModel
     @pending = find_pending(runs)
     @started = find_started(runs)
     @ended = find_ended(runs)
+    @failed = find_failed(runs)
     @best = find_best(runs)
 
     init_totals(runs)
@@ -16,6 +17,10 @@ class RunsViewModel
 
   def find_best(runs)
     runs.best.limit(20).order(score: :desc)
+  end
+
+  def find_failed(runs)
+    runs.failed.limit(20).order(ended_at: :desc)
   end
 
   def find_ended(runs)
