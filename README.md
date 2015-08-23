@@ -75,6 +75,7 @@ Run.find(16179).run_group.runs.map{|x| x.ended_at? ? x.score.nil? : false}
 # restart failed runs from one run group
 rr=Run.includes(:run_group).where(created_at: 10.days.ago...Time.now).to_a.select{|x| x.ended_at && x.score.nil?}.first.run_group.runs.to_a.reject(&:score).map{|x| x.update(started_at: nil, ended_at: nil)}
 Run.includes(:run_group).where(created_at: 5.days.ago...Time.now).to_a.select{|x| x.ended_at && x.score.nil?}.first.run_group.runs.to_a.reject(&:score).map{|x| RunsService.new.restart(x)}
+Run.includes(:run_group).where(created_at: 1.days.ago...Time.now).to_a.select{|x| x.ended_at && x.score.nil?}.map{|x| RunsService.new.restart(x)}
 ```
 
 ## Copyright
