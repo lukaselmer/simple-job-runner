@@ -7,6 +7,7 @@ RSpec.describe 'runs/index', type: :view do
     @ended_run_1 = build_stubbed(:ended_run, host_name: 'ended_host1', score: 99, ended_at: 25.days.ago)
     @ended_run_2 = build_stubbed(:ended_run, host_name: 'ended_host2', score: 34.5, ended_at: 23.days.ago)
     @best_ended_run = build_stubbed(:ended_run, host_name: 'best_host', score: 99.99, ended_at: 26.days.ago)
+    @failed_run = build_stubbed(:failed_ended_run, host_name: 'failed_host', ended_at: 27.days.ago)
     runs_view_model_mock = double('Runs View Model Mock')
     allow(runs_view_model_mock).to receive(:pending).and_return([@pending_run_1])
     allow(runs_view_model_mock).to receive(:pending_total).and_return(777)
@@ -15,6 +16,7 @@ RSpec.describe 'runs/index', type: :view do
     allow(runs_view_model_mock).to receive(:ended_total).and_return(999)
     allow(runs_view_model_mock).to receive(:ended_failed).and_return(23)
     allow(runs_view_model_mock).to receive(:best).and_return([@best_ended_run])
+    allow(runs_view_model_mock).to receive(:failed).and_return([@failed_run])
     assign(:runs, runs_view_model_mock)
   end
 
@@ -57,5 +59,13 @@ RSpec.describe 'runs/index', type: :view do
     expect(rendered).to include('99.99')
     expect(rendered).to include('26 days ago')
     expect(rendered).to include('best_host')
+  end
+
+  it 'renders the failed runs' do
+    render
+
+    expect(rendered).to include(ERB::Util.html_escape(@best_ended_run.algo_params.to_json.gsub(',', ', ')))
+    expect(rendered).to include('27 days ago')
+    expect(rendered).to include('failed_host')
   end
 end

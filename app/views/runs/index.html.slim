@@ -64,6 +64,26 @@ table.table.table-striped.table-hover
         td = run.algo_params.to_json.gsub(',', ', ')
         td = link_to("#{time_ago_in_words(run.created_at)} ago", runs_path(created_at: run.created_at))
 
+h2 Failed
+
+table.table.table-striped.table-hover
+  thead
+    tr
+      th Ended at
+      th Algo Params
+      th Host Name
+      th
+      th
+  tbody
+    - @runs.failed.each do |run|
+      tr
+        td = "#{time_ago_in_words(run.ended_at)} ago"
+        td = run.algo_params.to_json.gsub(',', ', ')
+        td = run.host_name
+        td = link_to 'Show', run
+        td = link_to 'Restart', restart_run_path(run)
+
+
 
 h2 Started
 
