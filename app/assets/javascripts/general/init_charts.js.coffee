@@ -14,7 +14,7 @@ getOptions = (series, chart_title, xName) ->
   yAxis:
     title:
       text: 'Score'
-    min: 70
+    min: 80
     max: 95
     type: 'numeric'
     minorTickInterval: 1
