@@ -65,6 +65,17 @@ runTextareaCode = (e) ->
 
 
 $ ->
+  $.each chartTextHpvReplacements, (_, hpvText) ->
+    $('body').on 'click', "text:contains('#{hpvText}')", (e) ->
+      return unless hpvText is $(e.target).text()
+      if e.shiftKey
+        $("text:contains('#{hpvText}')").each (_, el) ->
+          return unless $(el).text() is hpvText
+          return if el is e.target
+          $(el).click()
+
+
+$ ->
   $('.chart').each (i, chart) ->
     series = $(chart).data('series')
     chartTitle = $(chart).data('chart-title')
