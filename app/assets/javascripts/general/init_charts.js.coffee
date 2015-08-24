@@ -13,7 +13,7 @@ getOptions = (series, chart_title, xName) ->
     tickInterval: 5
   yAxis:
     title:
-      text: 'Score'
+      text: 'Accuracy'
     min: 80
     max: 95
     type: 'numeric'
@@ -21,7 +21,7 @@ getOptions = (series, chart_title, xName) ->
     tickInterval: 5
   tooltip:
     headerFormat: '<b>{series.name}</b><br />',
-    pointFormat: "#{xName} = {point.x}, Score = {point.y}"
+    pointFormat: "#{xName} = {point.x}, Accuracy = {point.y}"
   series: series
 
 
