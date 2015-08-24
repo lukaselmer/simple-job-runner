@@ -24,6 +24,32 @@ getOptions = (series, chart_title, xName) ->
     pointFormat: "#{xName} = {point.x}, Accuracy = {point.y}"
   series: series
 
+chartTextHpvReplacements =
+  0: 'NO-HPV'
+  1: 'HPV-PAR-SENT-SUB'
+  2: 'HPV-PAR-SENT-SUBNV'
+  3: 'HPV-PAR-SENT'
+  4: 'HPV-TOP'
+  5: 'HPV-PAR-SENT-TOP'
+  6: 'HPV-PAR'
+  7: 'HPV-PAR-TOP'
+
+chartTextDeletions = ['tfid_features=0 ', 'classifier_c=0.0195 ', 'classifier_penalty=l2 ', '_total',
+                      'algorithm_version=10.0 ']
+
+replaceLabels = (text) ->
+  for key of chartTextHpvReplacements
+    text = text.replace("Hierarchical paragraph vectors #{key}", chartTextHpvReplacements[key])
+  for value in chartTextDeletions
+    text = text.replace(value, '')
+  text
+
+
+renderChart = (chart, options) ->
+  text = JSON.stringify(options)
+  text = replaceLabels(text)
+  $(chart).highcharts(JSON.parse(text))
+
 
 initTextareaCode = (chart, options) ->
   chartParent = $(chart).parents('.chart-container')
@@ -35,7 +61,7 @@ runTextareaCode = (e) ->
   chartParent = $(e.target).parents('.chart-container')
   options = chartParent.find('.options').val()
   chart = chartParent.find('.chart')
-  chart.highcharts JSON.parse(options)
+  renderChart(chart, JSON.parse(options))
 
 
 $ ->
@@ -47,4 +73,4 @@ $ ->
     options = getOptions(series, chartTitle, xName)
 
     initTextareaCode(chart, options)
-    $(chart).highcharts options
+    renderChart(chart, options)
