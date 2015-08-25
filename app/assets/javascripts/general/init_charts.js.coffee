@@ -30,9 +30,9 @@ chartTextHpvReplacements =
   2: 'HPV-PAR-SENT-SUBNV'
   3: 'HPV-PAR-SENT'
   4: 'HPV-TOP'
-  5: 'HPV-PAR-SENT-TOP'
+  5: 'HPV-TOP-PAR-SENT'
   6: 'HPV-PAR'
-  7: 'HPV-PAR-TOP'
+  7: 'HPV-TOP-PAR'
 
 chartTextDeletions = ['tfid_features=0 ', 'classifier_c=0.0195 ', 'classifier_penalty=l2 ', '_total',
                       'algorithm_version=10.0 ']
