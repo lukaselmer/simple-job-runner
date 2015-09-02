@@ -1,6 +1,6 @@
 class RunGroupsController < ApplicationController
   def index
-    @run_groups = RunGroup.all
+    @run_groups = RunGroup.order(:created_at)
   end
 
   def show
