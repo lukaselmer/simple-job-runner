@@ -27,8 +27,8 @@ getOptions = (series, chart_title, xName) ->
 chartTextHpvReplacements =
   0: 'NO-HPV'
   1: 'HPV-PAR-SENT-SUB'
-  2: 'HPV-PAR-SENT-SUBNV'
-  3: 'HPV-PAR-SENT'
+  3: 'HPV-PAR-SENT-SUBNV'
+  2: 'HPV-PAR-SENT'
   4: 'HPV-TOP'
   5: 'HPV-TOP-PAR-SENT'
   6: 'HPV-PAR'
