@@ -2,44 +2,44 @@
 
 @font-face {
   font-family: 'Computer Modern Sans';
-  src: url('general/cmun-sans/cmunss.eot');
-  src: url('general/cmun-sans/cmunss.eot?#iefix') format('embedded-opentype'),
-  url('general/cmun-sans/cmunss.woff') format('woff'),
-  url('general/cmun-sans/cmunss.ttf') format('truetype'),
-  url('general/cmun-sans/cmunss.svg#cmunss') format('svg');
+  src: font-url('general/cmun-sans/cmunss.eot');
+  src: font-url('general/cmun-sans/cmunss.eot?#iefix') format('embedded-opentype'),
+  font-url('general/cmun-sans/cmunss.woff') format('woff'),
+  font-url('general/cmun-sans/cmunss.ttf') format('truetype'),
+  font-url('general/cmun-sans/cmunss.svg#cmunss') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Computer Modern Sans';
-  src: url('general/cmun-sans/cmunsx.eot');
-  src: url('general/cmun-sans/cmunsx.eot?#iefix') format('embedded-opentype'),
-  url('general/cmun-sans/cmunsx.woff') format('woff'),
-  url('general/cmun-sans/cmunsx.ttf') format('truetype'),
-  url('general/cmun-sans/cmunsx.svg#cmunsx') format('svg');
+  src: font-url('general/cmun-sans/cmunsx.eot');
+  src: font-url('general/cmun-sans/cmunsx.eot?#iefix') format('embedded-opentype'),
+  font-url('general/cmun-sans/cmunsx.woff') format('woff'),
+  font-url('general/cmun-sans/cmunsx.ttf') format('truetype'),
+  font-url('general/cmun-sans/cmunsx.svg#cmunsx') format('svg');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Computer Modern Sans';
-  src: url('general/cmun-sans/cmunsi.eot');
-  src: url('general/cmun-sans/cmunsi.eot?#iefix') format('embedded-opentype'),
-  url('general/cmun-sans/cmunsi.woff') format('woff'),
-  url('general/cmun-sans/cmunsi.ttf') format('truetype'),
-  url('general/cmun-sans/cmunsi.svg#cmunsi') format('svg');
+  src: font-url('general/cmun-sans/cmunsi.eot');
+  src: font-url('general/cmun-sans/cmunsi.eot?#iefix') format('embedded-opentype'),
+  font-url('general/cmun-sans/cmunsi.woff') format('woff'),
+  font-url('general/cmun-sans/cmunsi.ttf') format('truetype'),
+  font-url('general/cmun-sans/cmunsi.svg#cmunsi') format('svg');
   font-weight: normal;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Computer Modern Sans';
-  src: url('general/cmun-sans/cmunso.eot');
-  src: url('general/cmun-sans/cmunso.eot?#iefix') format('embedded-opentype'),
-  url('general/cmun-sans/cmunso.woff') format('woff'),
-  url('general/cmun-sans/cmunso.ttf') format('truetype'),
-  url('general/cmun-sans/cmunso.svg#cmunso') format('svg');
+  src: font-url('general/cmun-sans/cmunso.eot');
+  src: font-url('general/cmun-sans/cmunso.eot?#iefix') format('embedded-opentype'),
+  font-url('general/cmun-sans/cmunso.woff') format('woff'),
+  font-url('general/cmun-sans/cmunso.ttf') format('truetype'),
+  font-url('general/cmun-sans/cmunso.svg#cmunso') format('svg');
   font-weight: bold;
   font-style: italic;
 }
