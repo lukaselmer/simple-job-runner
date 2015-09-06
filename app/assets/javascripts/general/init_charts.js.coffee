@@ -1,6 +1,8 @@
 getOptions = (series, chart_title, xName) ->
   chart:
     height: 700
+    style:
+      fontFamily: 'Computer Modern Sans'
   line:
     dataLabels:
       enabled: true
