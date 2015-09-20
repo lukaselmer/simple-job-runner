@@ -19,7 +19,7 @@ heroku create
 # heroku create prints the app APP_HOST
 git push heroku master
 # choose an random SECRET_RANDOM_API_KEY, e.g. zyMvxTzylN1ZKLd5TSaWQD9UsESsU00CGH3P
-heroku config set API_KEY=<SECRET_RANDOM_API_KEY> APP_HOST=rocky-lowlands-2159.herokuapp.com APP_PORT=443
+heroku config:set API_KEY=<SECRET_RANDOM_API_KEY> APP_HOST=rocky-lowlands-2159.herokuapp.com APP_PORT=443
 heroku run rake db:migrate
 heroku open
 ```
