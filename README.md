@@ -16,7 +16,7 @@ cd simple-job-runner
 git fetch --all
 git checkout master
 heroku create
-# heroku create prints the app APP_HOST
+# heroku create prints the app APP_HOST, e.g. rocky-lowlands-2159.herokuapp.com
 git push heroku master
 # choose an random SECRET_RANDOM_API_KEY, e.g. zyMvxTzylN1ZKLd5TSaWQD9UsESsU00CGH3P
 heroku config:set API_KEY=<SECRET_RANDOM_API_KEY> APP_HOST=rocky-lowlands-2159.herokuapp.com APP_PORT=443
