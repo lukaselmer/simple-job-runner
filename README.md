@@ -13,6 +13,8 @@ Job Scheduling and Result Storage
 ```sh
 git clone git@github.com:lukaselmer/simple-job-runner.git
 cd simple-job-runner
+git fetch --all
+git checkout master
 heroku create
 # heroku create prints the app APP_HOST
 git push heroku master
