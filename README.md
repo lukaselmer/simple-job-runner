@@ -18,8 +18,8 @@ git checkout master
 heroku create
 # heroku create prints the app APP_HOST
 git push heroku master
-# example for secret key base: d27b49b2db8304f2987dfef849b88e715f80665d597eb0ae2649538a46e6c77d6166b1da33f4737678eaa667ff58ed9b8512865cfd44f6bc5438af1932e029d0
-heroku config set API_KEY=SECRET_RANDOM_API_KEY APP_HOST=myapp.herokuapp.com APP_PORT=443 SECRET_KEY_BASE=GENERATED_RANDOM_KEY
+# choose an random SECRET_RANDOM_API_KEY, e.g. zyMvxTzylN1ZKLd5TSaWQD9UsESsU00CGH3P
+heroku config set API_KEY=<SECRET_RANDOM_API_KEY> APP_HOST=rocky-lowlands-2159.herokuapp.com APP_PORT=443
 heroku run rake db:migrate
 heroku open
 ```
